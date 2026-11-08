@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<title>Yasamal-15 MMMC (Akkonak Residents)</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c5cab">
+<meta name="description" content="Yasamal 15 MMMC — bina maliyyəsi, aylıq hesablar və elanlar">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Yasamal 15">
+<script src="config.js"></script>
+<script>
+window.OneSignalDeferred = window.OneSignalDeferred || [];
+if (window.ONESIGNAL_APP_ID) {
+  var s = document.createElement("script"); s.src = "https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"; s.defer = true; document.head.appendChild(s);
+  OneSignalDeferred.push(async function (OneSignal) {
+    var base = location.pathname.replace(/[^/]*$/, "");
+    await OneSignal.init({ appId: window.ONESIGNAL_APP_ID, serviceWorkerPath: base.slice(1) + "OneSignalSDKWorker.js", serviceWorkerParam: { scope: base } });
+  });
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--bg:#f4f3ef;--surface:#fcfcfb;--surface-2:#f0efec;--line:#e2e0da;--text:#0b0b0b;--text-2:#52514e;--muted:#85837d;
+ --accent:#1c5cab;--accent-soft:#e3eefb;--on-accent:#fff;--s1:#2a78d6;--s2:#eb6834;
+ --good:#0ca30c;--good-text:#006300;--warning:#fab219;--critical:#d03b3b;--good-soft:#e4f4e4;--warn-soft:#fdf2d9;--crit-soft:#fbe6e6;--radius:14px}
+@media (prefers-color-scheme:dark){:root{color-scheme:dark;--bg:#121211;--surface:#1a1a19;--surface-2:#242422;--line:#33332f;--text:#f0efec;--text-2:#c3c2b7;--muted:#8e8d86;
+ --accent:#5598e7;--accent-soft:#1c2a3d;--on-accent:#0b0b0b;--s1:#3987e5;--s2:#d95926;--good-text:#5fd35f;--good-soft:#1b2c1b;--warn-soft:#33290f;--crit-soft:#3a1d1d}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Manrope,system-ui,sans-serif;font-size:15px;line-height:1.45}
+button,input,select{font:inherit;color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 14px 60px}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.logo{width:40px;height:40px;border-radius:11px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-weight:800;flex:none}
+h1{margin:0;font-size:19px;font-weight:800}
+.sub{color:var(--text-2);font-size:13px}
+.spacer{flex:1}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:10px;padding:3px}
+.seg button{border:0;background:transparent;padding:5px 10px;border-radius:8px;cursor:pointer;font-weight:700;font-size:13px;color:var(--text-2)}
+.seg button.on{background:var(--surface);color:var(--text)}
+nav{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+nav button{border:0;background:none;padding:10px 14px;cursor:pointer;font-weight:700;color:var(--text-2);border-bottom:2px solid transparent;white-space:nowrap}
+nav button.on{color:var(--text);border-bottom-color:var(--accent)}
+.grid{display:grid;gap:14px}
+.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:820px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.two{grid-template-columns:1.3fr 1fr}
+@media(max-width:820px){.two{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;min-width:0}
+.card h2{margin:0 0 4px;font-size:15px;font-weight:800}
+.hint{color:var(--muted);font-size:12.5px;margin:0 0 12px}
+.label{color:var(--text-2);font-size:12.5px;font-weight:600}
+.value{font-size:25px;font-weight:800;letter-spacing:-.02em;margin-top:4px;font-variant-numeric:tabular-nums}
+.foot{color:var(--muted);font-size:12.5px;margin-top:2px}
+.meter{height:6px;border-radius:99px;background:var(--surface-2);margin-top:9px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--s1);border-radius:99px}
+.mt{margin-top:14px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:12px;color:var(--text-2);font-weight:700;padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.scroll{overflow-x:auto}
+.small{font-size:12.5px}.muted{color:var(--muted)}
+.empty{padding:24px 8px;text-align:center;color:var(--muted)}
+.status{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.status .ico{width:15px;height:15px;border-radius:50%;display:inline-grid;place-items:center;font-size:10px;color:#fff;font-weight:900}
+.st-paid{background:var(--good-soft)}.st-paid .ico{background:var(--good)}
+.st-partial{background:var(--warn-soft)}.st-partial .ico{background:var(--warning);color:#3a2a00}
+.st-unpaid{background:var(--surface-2)}.st-unpaid .ico{background:var(--muted)}
+.st-overdue{background:var(--crit-soft)}.st-overdue .ico{background:var(--critical)}
+.btn{border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:10px;cursor:pointer;font-weight:700;font-size:14px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn[disabled]{opacity:.55;cursor:wait}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;color:var(--text-2);font-weight:700}
+input,select{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:9px 11px}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.banner{padding:11px 14px;border-radius:12px;margin-bottom:14px;font-size:14px}
+.banner.crit{background:var(--crit-soft)}.banner.info{background:var(--accent-soft)}
+.big{font-size:34px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.paybox{white-space:pre-wrap;background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:13.5px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--text-2);margin-top:8px}
+.sw{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:5px}
+.notice{padding:12px 0;border-bottom:1px solid var(--line)}.notice:last-child{border-bottom:0}
+.notice .t{font-weight:800}.notice p{margin:4px 0 0;color:var(--text-2);white-space:pre-wrap}
+.tip{position:fixed;pointer-events:none;background:var(--text);color:var(--surface);font-size:12.5px;padding:7px 10px;border-radius:8px;opacity:0;white-space:nowrap;font-weight:600;z-index:9}
+.err{color:var(--critical);font-weight:700;font-size:13.5px;margin-top:8px}
+.push{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px;border-color:var(--accent);background:var(--accent-soft)}
+.push .ic{font-size:22px}.push .tx{flex:1;min-width:200px}.push .tx b{display:block}
+.linklike{background:none;border:0;color:var(--accent);font-weight:700;cursor:pointer;padding:0;font-size:13.5px}
+ol.ios{margin:6px 0 0;padding-left:20px;font-size:13.5px;color:var(--text-2)}
+.foot-note{margin-top:22px;text-align:center;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header id="hdr"></header>
+  <nav id="nav"></nav>
+  <main id="main"><div class="card empty">…</div></main>
+  <div class="foot-note" id="fn"></div>
+</div>
+<div class="tip" id="tip"></div>
+<script>
+var DATA=null;
+var T={
+ az:{app:"Bina maliyyəsi və aylıq hesablar",overview:"İcmal",mybill:"Mənim hesabım",notices:"Elanlar",loading:"Yüklənir…",loadErr:"Məlumatları yükləmək alınmadı. Səhifəni yeniləyin.",
+  balance:"Fondun balansı",balanceFoot:"bütün gəlirlər − bütün xərclər",collectedFor:"Yığılıb · {p} hesabları",ofBilled:"{b} hesablanmışdan · {n}/{m} mənzil ödəyib",
+  expMonth:"Bu ayın xərcləri",debt:"Ümumi borc",debtFoot:"{n} mənzilin gecikmiş borcu var",incExp:"Gəlir və xərc",last6:"Son 6 ay",income:"Gəlir",expense:"Xərc",
+  noIncExp:"Ödənişlər və xərclər qeyd olunduqca qrafik burada görünəcək.",byCat:"Xərclər kateqoriyalar üzrə",last12:"Son 12 ay",noExp:"Hələ xərc qeyd olunmayıb.",
+  recent:"Son əməliyyatlar",noTx:"Hələ əməliyyat yoxdur.",date:"Tarix",category:"Kateqoriya",note:"Qeyd",amount:"Məbləğ",
+  login:"Hesabınıza baxın",loginHint:"Mənzil nömrənizi seçin.",report:"Hesabat",reportHint:"Bütün mənzillər üzrə hesablar",kwhCol:"kVt·s",prevR:"Əvvəlki",curR:"İndiki",open:"Bax",apt:"Mənzil",pin:"PIN kod",show:"Göstər",remember:"Bu cihazda yadda saxla",
+  wrong:"Mənzil və ya PIN səhvdir. Qalan cəhd: {n}.",locked:"Çox sayda səhv cəhd. 15 dəqiqə sonra yenidən yoxlayın.",logout:"Çıxış",change:"Dəyiş",
+  pushTitle:"Bildirişləri aktiv edin",pushText:"Yeni hesablar, xatırlatmalar və elanlar telefonunuza gəlsin.",pushBtn:"🔔 Aktiv et",
+  pushOn:"Bildirişlər aktivdir — mənzil {a}",pushDenied:"Bildirişlərə icazə verilmədi. Brauzer ayarlarından icazə verin.",pushErr:"Bildirişləri aktiv etmək alınmadı. Yenidən cəhd edin.",
+  pushWait:"Gözləyin…",iosTitle:"iPhone-da bildiriş almaq üçün",ios1:"Aşağıdakı Paylaş düyməsinə (□↑) toxunun",ios2:"“Əsas ekrana əlavə et” seçin",ios3:"Əsas ekrandakı “Yasamal 15” ikonundan açıb “Aktiv et” düyməsinə toxunun",
+  pushNA:"Bu brauzer bildirişləri dəstəkləmir.",aptN:"Mənzil {n}",
+  youOwe:"Ödənilməli məbləğ",allPaid:"Bütün hesablar ödənilib. Təşəkkür edirik!",dueBy:"Son tarix: {d}",howToPay:"Necə ödəmək olar",latest:"Son hesab",
+  history:"Hesab tarixçəsi",period:"Dövr",kommunal:"Kommunal",elec:"Elektrik",parking:"Parkinq",extra:"Əlavə",total:"Cəmi",paid:"Ödənilib",left:"Qalıq",due:"Son tarix",status:"Status",
+  meter:"Sayğac",kwh:"kVt·s",noBills:"Hələ hesab yoxdur.",st_paid:"Ödənilib",st_partial:"Qismən",st_unpaid:"Ödənilməyib",st_overdue:"Gecikib",
+  bannerOverdue:"Gecikmiş borcunuz var: <b>{a}</b>.",noNotices:"Elan yoxdur.",updated:"Yenilənib: {d}",readingPending:"Sayğac göstəricisi hələ daxil edilməyib"},
+ en:{app:"Building finances & monthly bills",overview:"Overview",mybill:"My bill",notices:"Announcements",loading:"Loading…",loadErr:"Couldn't load the data. Please refresh the page.",
+  balance:"Fund balance",balanceFoot:"all income − all expenses",collectedFor:"Collected · {p} bills",ofBilled:"of {b} billed · {n}/{m} apartments paid",
+  expMonth:"Expenses this month",debt:"Total outstanding",debtFoot:"{n} apartments overdue",incExp:"Income vs expenses",last6:"Last 6 months",income:"Income",expense:"Expenses",
+  noIncExp:"The chart appears once payments and expenses are recorded.",byCat:"Expenses by category",last12:"Last 12 months",noExp:"No expenses recorded yet.",
+  recent:"Recent transactions",noTx:"No transactions yet.",date:"Date",category:"Category",note:"Note",amount:"Amount",
+  login:"See your bill",loginHint:"Choose your apartment.",report:"Report",reportHint:"Bills for all apartments",kwhCol:"kWh",prevR:"Previous",curR:"Current",open:"View",apt:"Apartment",pin:"PIN",show:"Show",remember:"Remember on this device",
+  wrong:"Wrong apartment or PIN. Attempts left: {n}.",locked:"Too many wrong attempts. Try again in 15 minutes.",logout:"Log out",change:"Change",
+  pushTitle:"Turn on notifications",pushText:"Get new bills, reminders and announcements on your phone.",pushBtn:"🔔 Turn on",
+  pushOn:"Notifications are on — apartment {a}",pushDenied:"Notifications were blocked. Allow them in your browser settings.",pushErr:"Couldn't turn on notifications. Please try again.",
+  pushWait:"Please wait…",iosTitle:"To get notifications on iPhone",ios1:"Tap the Share button (□↑) below",ios2:"Choose “Add to Home Screen”",ios3:"Open “Yasamal 15” from your home screen and tap “Turn on”",
+  pushNA:"This browser doesn't support notifications.",aptN:"Apartment {n}",
+  youOwe:"Amount due",allPaid:"All bills are paid. Thank you!",dueBy:"Due by {d}",howToPay:"How to pay",latest:"Latest bill",
+  history:"Bill history",period:"Period",kommunal:"Kommunal",elec:"Electricity",parking:"Parking",extra:"Extra",total:"Total",paid:"Paid",left:"Remaining",due:"Due",status:"Status",
+  meter:"Meter",kwh:"kWh",noBills:"No bills yet.",st_paid:"Paid",st_partial:"Partial",st_unpaid:"Unpaid",st_overdue:"Overdue",
+  bannerOverdue:"You have an overdue balance: <b>{a}</b>.",noNotices:"No announcements.",updated:"Updated: {d}",readingPending:"Meter reading not entered yet"}
+};
+var MON={az:["Yanvar","Fevral","Mart","Aprel","May","İyun","İyul","Avqust","Sentyabr","Oktyabr","Noyabr","Dekabr"],en:["January","February","March","April","May","June","July","August","September","October","November","December"]};
+var MS={az:["Yan","Fev","Mar","Apr","May","İyn","İyl","Avq","Sen","Okt","Noy","Dek"],en:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]};
+function lsGet(k,d){try{var v=localStorage.getItem("mmmc."+k);return v==null?d:JSON.parse(v);}catch(e){return d;}}
+function lsSet(k,v){try{if(v==null)localStorage.removeItem("mmmc."+k);else localStorage.setItem("mmmc."+k,JSON.stringify(v));}catch(e){}}
+var S={lang:lsGet("lang","az"),tab:"overview",ov:null,ovErr:false,bill:null,cred:lsGet("cred",null),busy:false,err:"",incTable:false};
+function t(k,v){var s=(T[S.lang][k]!=null?T[S.lang][k]:T.en[k])||k;if(v)for(var x in v)s=s.split("{"+x+"}").join(v[x]);return s;}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function cur(){return (S.ov&&S.ov.currency)||"₼";}
+function money(n){var v=Math.round((+n||0)*100)/100;return v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})+" "+cur();}
+function pL(p){if(!p)return"";var a=p.split("-");return MON[S.lang][+a[1]-1]+" "+a[0];}
+function pS(p){return MS[S.lang][+p.split("-")[1]-1];}
+function dL(d){if(!d)return"—";var a=d.split("-");if(a.length<3)return esc(d);return (+a[2])+" "+MS[S.lang][+a[1]-1]+" "+a[0];}
+function pill(st){var ico={paid:"✓",partial:"◐",unpaid:"○",overdue:"!"}[st]||"○";return '<span class="status st-'+st+'"><span class="ico">'+ico+'</span>'+t("st_"+st)+'</span>';}
+
+
+function fixStatus(x){var td=today();x.status=x.left<=0.005?"paid":(x.due&&x.due<td?"overdue":(x.paid>0?"partial":"unpaid"));return x;}
+function allBills(){var out=[];DATA.order.forEach(function(a){(DATA.bills[a]||[]).forEach(function(b){out.push(fixStatus(b));});});return out;}
+function call(fn,a){
+  if(fn==="getOverview"){var o=DATA.ov,td=today();o.debtors={};allBills().forEach(function(b){if(b.status==="overdue")o.debtors[b.apt]=1;});o.debtors=Object.keys(o.debtors).length;return Promise.resolve(o);}
+  var list=(DATA.bills[a]||[]).map(fixStatus);return Promise.resolve({apt:a,bills:list,payInfo:DATA.ov.payInfo,currency:DATA.ov.currency});
+}
+function _unused_call(fn){var args=[].slice.call(arguments,1);return new Promise(function(res,rej){var r=google.script.run.withSuccessHandler(res).withFailureHandler(rej);r[fn].apply(r,args);});}
+
+function render(){
+  document.documentElement.lang=S.lang;
+  var name=(S.ov&&S.ov.building)||"MMMC";
+  var ini=name.split(/\s+/).filter(Boolean).slice(0,2).map(function(w){return w[0];}).join("").toUpperCase()||"M";
+  document.getElementById("hdr").innerHTML='<div class="logo">'+esc(ini)+'</div><div><h1>'+esc(name)+'</h1><div class="sub">'+t("app")+'</div></div><div class="spacer"></div>'+
+   '<div class="seg"><button data-a="lang" data-v="az" class="'+(S.lang=="az"?"on":"")+'">AZ</button><button data-a="lang" data-v="en" class="'+(S.lang=="en"?"on":"")+'">EN</button></div>';
+  var tabs=[["overview",t("overview")],["bill",t("mybill")],["report",t("report")],["notices",t("notices")]];
+  document.getElementById("nav").innerHTML=tabs.map(function(x){return '<button data-a="tab" data-v="'+x[0]+'" class="'+(S.tab==x[0]?"on":"")+'">'+x[1]+'</button>';}).join("");
+  var m=document.getElementById("main");
+  if(S.ovErr) m.innerHTML='<div class="card empty">'+t("loadErr")+'</div>';
+  else if(!S.ov) m.innerHTML='<div class="card empty">'+t("loading")+'</div>';
+  else m.innerHTML = ((S.tab=="overview"||S.tab=="bill")?pushCard():"") + (S.tab=="bill"?viewBill():S.tab=="notices"?viewNotices():S.tab=="report"?viewReport():viewOverview());
+  document.getElementById("fn").textContent=DATA?t("updated",{d:DATA.generated}):"";
+}
+function viewOverview(){
+  var o=S.ov, rate=o.billed?Math.min(100,Math.round(o.collected/o.billed*100)):0;
+  var h='<div class="grid kpis">'+
+   '<div class="card"><div class="label">'+t("balance")+'</div><div class="value">'+money(o.balance)+'</div><div class="foot">'+t("balanceFoot")+'</div></div>'+
+   '<div class="card"><div class="label">'+t("collectedFor",{p:pL(o.period)})+'</div><div class="value">'+money(o.collected)+'</div><div class="foot">'+t("ofBilled",{b:money(o.billed),n:o.paidCount,m:o.billCount})+'</div><div class="meter"><i style="width:'+rate+'%"></i></div></div>'+
+   '<div class="card"><div class="label">'+t("expMonth")+'</div><div class="value">'+money(o.expMonth)+'</div></div>'+
+   '<div class="card"><div class="label">'+t("debt")+'</div><div class="value">'+money(o.outstanding)+'</div><div class="foot">'+t("debtFoot",{n:o.debtors})+'</div></div></div>';
+  h+='<div class="grid two mt"><div class="card"><div style="display:flex;gap:10px"><div style="flex:1"><h2>'+t("incExp")+'</h2><p class="hint">'+t("last6")+'</p></div></div>'+chart(o)+'</div>'+
+     '<div class="card"><h2>'+t("byCat")+'</h2><p class="hint">'+t("last12")+'</p>'+cats(o)+'</div></div>';
+  h+='<div class="card mt"><h2>'+t("recent")+'</h2>'+(o.recent.length?'<div class="scroll"><table><thead><tr><th>'+t("date")+'</th><th>'+t("category")+'</th><th>'+t("note")+'</th><th class="num">'+t("amount")+'</th></tr></thead><tbody>'+
+     o.recent.map(function(x){return '<tr><td>'+dL(x.date)+'</td><td>'+esc(x.category)+'</td><td class="small">'+esc(x.note)+'</td><td class="num">'+(x.income?'<span style="color:var(--good-text)">+':'−')+money(x.amount)+(x.income?'</span>':'')+'</td></tr>';}).join("")+
+     '</tbody></table></div>':'<div class="empty">'+t("noTx")+'</div>')+'</div>';
+  return h;
+}
+function niceMax(v){if(v<=0)return 100;var e=Math.pow(10,Math.floor(Math.log(v)/Math.LN10)),n=v/e;return(n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*e;}
+function bar(x,y,w,h){var r=Math.min(4,w/2,h);return "M"+x+","+(y+h)+"V"+(y+r)+"Q"+x+","+y+" "+(x+r)+","+y+"H"+(x+w-r)+"Q"+(x+w)+","+y+" "+(x+w)+","+(y+r)+"V"+(y+h)+"Z";}
+function chart(o){
+  var ms=o.monthly; if(!ms.some(function(m){return m.inc||m.exp;})) return '<div class="empty">'+t("noIncExp")+'</div>';
+  var W=560,H=230,L=48,R=8,Tp=10,B=26,iw=W-L-R,ih=H-Tp-B,max=niceMax(Math.max.apply(null,ms.map(function(m){return Math.max(m.inc,m.exp);})));
+  function y(v){return Tp+ih-(v/max)*ih;} var gw=iw/ms.length,bw=Math.min(26,(gw-18)/2),g="";
+  for(var i=0;i<=4;i++){var v=max*i/4;g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--line)"/><text x="'+(L-8)+'" y="'+(y(v)+4)+'" text-anchor="end" font-size="11" fill="var(--muted)">'+(v>=1000?(Math.round(v/100)/10)+"k":Math.round(v))+'</text>';}
+  ms.forEach(function(m,i){var cx=L+gw*i+gw/2;[["inc","var(--s1)",-1],["exp","var(--s2)",1]].forEach(function(k){var v=m[k[0]],x=k[2]<0?cx-1-bw:cx+1,top=y(v),hh=Tp+ih-top;
+    if(hh>0)g+='<path d="'+bar(x,top,bw,hh)+'" fill="'+k[1]+'"/>';g+='<rect x="'+(x-2)+'" y="'+Tp+'" width="'+(bw+4)+'" height="'+ih+'" fill="transparent" data-tip="'+esc(pL(m.period))+' · '+(k[0]=="inc"?t("income"):t("expense"))+': '+esc(money(v))+'"/>';});
+    g+='<text x="'+cx+'" y="'+(H-8)+'" text-anchor="middle" font-size="11.5" fill="var(--text-2)">'+esc(pS(m.period))+'</text>';});
+  return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" role="img" aria-label="'+t("incExp")+'">'+g+'</svg><div class="legend"><span><i class="sw" style="background:var(--s1)"></i>'+t("income")+'</span><span><i class="sw" style="background:var(--s2)"></i>'+t("expense")+'</span></div>';
+}
+function cats(o){
+  if(!o.categories.length) return '<div class="empty">'+t("noExp")+'</div>';
+  var max=o.categories[0].amount;
+  return o.categories.map(function(c){return '<div style="margin:9px 0" data-tip="'+esc(c.name)+': '+esc(money(c.amount))+'"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><b style="font-weight:600">'+esc(c.name)+'</b><span class="muted">'+money(c.amount)+'</span></div><div style="height:10px;background:var(--surface-2);border-radius:4px"><div style="height:100%;width:'+Math.max(1.5,c.amount/max*100)+'%;background:var(--s1);border-radius:4px"></div></div></div>';}).join("");
+}
+function viewBill(){
+  if(!S.bill){
+    var opts=S.ov.apartments.map(function(a){var sel=(S.lastApt||(S.cred&&S.cred.apt))==a?" selected":"";return '<option value="'+esc(a)+'"'+sel+'>'+esc(a)+'</option>';}).join("");
+    return '<div class="card" style="max-width:480px"><h2>'+t("login")+'</h2><p class="hint">'+t("loginHint")+'</p><form id="lf" class="row">'+
+      '<div class="field"><label for="apt">'+t("apt")+'</label><select id="apt">'+opts+'</select></div>'+
+
+      '<button class="btn primary" '+(S.busy?"disabled":"")+'>'+t("show")+'</button></form>'+
+      '<label class="small" style="display:block;margin-top:10px"><input type="checkbox" id="rem" checked style="padding:0"> '+t("remember")+'</label>'+(S.err?'<div class="err">'+S.err+'</div>':"")+'</div>';
+  }
+  var b=S.bill, list=b.bills, owe=list.reduce(function(s,x){return s+x.left;},0), overdue=list.filter(function(x){return x.status=="overdue";}).reduce(function(s,x){return s+x.left;},0);
+  var nextDue=list.filter(function(x){return x.left>0;}).map(function(x){return x.due;}).sort()[0], latest=list[0];
+  var h=overdue>0?'<div class="banner crit">'+t("bannerOverdue",{a:money(overdue)})+'</div>':"";
+  h+='<div class="grid two"><div class="card"><div style="display:flex;align-items:center"><h2 style="flex:1">'+t("aptN",{n:esc(b.apt)})+'</h2><button class="btn" data-a="logout" style="padding:5px 10px;font-size:13px">'+t("change")+'</button></div>'+
+    '<div class="label mt">'+t("youOwe")+'</div><div class="big">'+money(owe)+'</div><div class="foot">'+(owe>0?(nextDue?pill(nextDue<today()?"overdue":"unpaid")+" &nbsp;"+t("dueBy",{d:dL(nextDue)}):""):pill("paid")+" &nbsp;"+t("allPaid"))+'</div>'+
+    '<h2 class="mt">'+t("howToPay")+'</h2><div class="paybox" style="margin-top:8px">'+esc(b.payInfo||"—")+'</div></div>';
+  h+='<div class="card">'+(latest?'<div style="display:flex;align-items:flex-start;gap:8px"><div style="flex:1"><h2>'+t("latest")+': '+esc(pL(latest.period))+'</h2><p class="hint">'+t("dueBy",{d:dL(latest.due)})+'</p></div>'+pill(latest.status)+'</div>'+breakdown(latest):'<div class="empty">'+t("noBills")+'</div>')+'</div></div>';
+  if(list.length) h+='<div class="card mt"><h2>'+t("history")+'</h2><div class="scroll"><table><thead><tr><th>'+t("period")+'</th><th class="num">'+t("kommunal")+'</th><th class="num">'+t("elec")+'</th><th class="num">'+t("parking")+'</th><th class="num">'+t("total")+'</th><th class="num">'+t("left")+'</th><th>'+t("due")+'</th><th>'+t("status")+'</th></tr></thead><tbody>'+
+    list.map(function(x){return '<tr><td><b>'+esc(pL(x.period))+'</b></td><td class="num">'+money(x.kommunal)+'</td><td class="num">'+money(x.elec)+(x.kwh!=null?'<div class="small muted">'+x.kwh+' '+t("kwh")+'</div>':'')+'</td><td class="num">'+(x.parking?money(x.parking):"—")+'</td><td class="num">'+money(x.total)+'</td><td class="num"><b>'+money(x.left)+'</b></td><td>'+dL(x.due)+'</td><td>'+pill(x.status)+'</td></tr>';}).join("")+'</tbody></table></div></div>';
+  return h;
+}
+function breakdown(x){
+  var r='<tr><td>'+t("kommunal")+'</td><td class="num">'+money(x.kommunal)+'</td></tr>';
+  if(x.prev!=null||x.cur!=null) r+='<tr><td>'+t("elec")+'<div class="small muted">'+(x.cur!=null&&x.prev!=null?t("meter")+': '+x.prev+' → '+x.cur+' = '+x.kwh+' '+t("kwh")+' × '+x.tariff:t("readingPending"))+'</div></td><td class="num">'+money(x.elec)+'</td></tr>';
+  if(x.parking) r+='<tr><td>'+t("parking")+'</td><td class="num">'+money(x.parking)+'</td></tr>';
+  if(x.extra) r+='<tr><td>'+esc(x.extraNote||t("extra"))+'</td><td class="num">'+money(x.extra)+'</td></tr>';
+  r+='<tr><td><b>'+t("total")+'</b></td><td class="num"><b>'+money(x.total)+'</b></td></tr>';
+  if(x.paid>0) r+='<tr><td>'+t("paid")+(x.paidDate?' <span class="small muted">('+dL(x.paidDate)+')</span>':'')+'</td><td class="num">−'+money(x.paid)+'</td></tr><tr><td><b>'+t("left")+'</b></td><td class="num"><b>'+money(x.left)+'</b></td></tr>';
+  return '<table><tbody>'+r+'</tbody></table>';
+}
+function viewReport(){
+  var all=allBills(), ps=[];all.forEach(function(b){if(ps.indexOf(b.period)<0)ps.push(b.period);});ps.sort().reverse();
+  if(!ps.length) return '<div class="card empty">'+t("noBills")+'</div>';
+  var p=S.rp&&ps.indexOf(S.rp)>=0?S.rp:ps[0], list=all.filter(function(b){return b.period===p;});
+  function sm(k){return list.reduce(function(s,b){return s+(+b[k]||0);},0);}
+  var sel=ps.length>1?'<select id="rp">'+ps.map(function(x){return '<option value="'+x+'"'+(x===p?' selected':'')+'>'+esc(pL(x))+'</option>';}).join("")+'</select>':'';
+  var h='<div class="card"><div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap"><div style="flex:1"><h2>'+t("report")+': '+esc(pL(p))+'</h2><p class="hint">'+t("reportHint")+'</p></div>'+sel+'</div>'+
+   '<div class="scroll"><table><thead><tr><th>'+t("apt")+'</th><th class="num">'+t("kommunal")+'</th><th class="num">'+t("prevR")+'</th><th class="num">'+t("curR")+'</th><th class="num">'+t("kwhCol")+'</th><th class="num">'+t("elec")+'</th><th class="num">'+t("parking")+'</th><th class="num">'+t("total")+'</th><th class="num">'+t("paid")+'</th><th>'+t("status")+'</th></tr></thead><tbody>'+
+   list.map(function(b){return '<tr data-a="openApt" data-v="'+esc(b.apt)+'" style="cursor:pointer"><td><b>'+esc(b.apt)+'</b></td><td class="num">'+money(b.kommunal)+'</td><td class="num muted">'+(b.prev!=null?b.prev:"—")+'</td><td class="num muted">'+(b.cur!=null?b.cur:"—")+'</td><td class="num">'+(b.kwh!=null?b.kwh:"—")+'</td><td class="num">'+money(b.elec)+'</td><td class="num">'+(b.parking?money(b.parking):"—")+'</td><td class="num"><b>'+money(b.total)+'</b></td><td class="num">'+money(b.paid)+'</td><td>'+pill(b.status)+'</td></tr>';}).join("")+
+   '<tr style="background:var(--surface-2)"><td><b>'+t("total")+'</b></td><td class="num"><b>'+money(sm("kommunal"))+'</b></td><td></td><td></td><td class="num"><b>'+sm("kwh")+'</b></td><td class="num"><b>'+money(sm("elec"))+'</b></td><td class="num"><b>'+money(sm("parking"))+'</b></td><td class="num"><b>'+money(sm("total"))+'</b></td><td class="num"><b>'+money(sm("paid"))+'</b></td><td></td></tr></tbody></table></div></div>';
+  return h;
+}
+function isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}
+function isStandalone(){return (window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;}
+function pushCard(){
+  if(!window.ONESIGNAL_APP_ID||!S.ov) return "";
+  var on=lsGet("pushOn",false), apt=lsGet("pushApt",null);
+  if(on&&!S.pushEdit) return '<div class="card push"><span class="ic">🔔</span><div class="tx">'+t("pushOn",{a:esc(apt)})+'</div><button class="linklike" data-a="pushEdit">'+t("change")+'</button></div>';
+  if(isIOS()&&!isStandalone()) return '<div class="card push"><span class="ic">🔔</span><div class="tx"><b>'+t("iosTitle")+'</b><ol class="ios"><li>'+t("ios1")+'</li><li>'+t("ios2")+'</li><li>'+t("ios3")+'</li></ol></div></div>';
+  if(!("Notification" in window)||!("serviceWorker" in navigator)) return '<div class="card push"><span class="ic">🔕</span><div class="tx">'+t("pushNA")+'</div></div>';
+  var cur=apt||(S.cred&&S.cred.apt)||"";
+  var opts=S.ov.apartments.map(function(a){return '<option value="'+esc(a)+'"'+(a===cur?" selected":"")+'>'+esc(a)+'</option>';}).join("");
+  return '<div class="card push"><span class="ic">🔔</span><div class="tx"><b>'+t("pushTitle")+'</b>'+t("pushText")+(S.pushMsg?'<div class="err">'+esc(S.pushMsg)+'</div>':'')+'</div>'+
+    '<div class="row"><div class="field"><label for="papt">'+t("apt")+'</label><select id="papt">'+opts+'</select></div><button class="btn primary" data-a="pushOn" '+(S.pushBusy?"disabled":"")+'>'+(S.pushBusy?t("pushWait"):t("pushBtn"))+'</button></div></div>';
+}
+function enablePush(apt){
+  S.pushBusy=true;S.pushMsg="";render();
+  var done=false; setTimeout(function(){ if(!done){S.pushBusy=false;S.pushMsg=t("pushErr");render();} },20000);
+  OneSignalDeferred.push(async function(OS){
+    try{
+      if(!OS.Notifications.permission) await OS.Notifications.requestPermission();
+      if(!OS.Notifications.permission){ done=true;S.pushBusy=false;S.pushMsg=t("pushDenied");render();return; }
+      await OS.User.PushSubscription.optIn();
+      await OS.User.addTag("apt",String(apt));
+      lsSet("pushOn",true);lsSet("pushApt",apt);done=true;S.pushBusy=false;S.pushEdit=false;render();
+    }catch(e){ done=true;S.pushBusy=false;S.pushMsg=t("pushErr");render(); }
+  });
+}
+function viewNotices(){
+  var n=S.ov.notices; if(!n.length) return '<div class="card empty">'+t("noNotices")+'</div>';
+  return '<div class="card">'+n.map(function(x){return '<div class="notice"><div class="small muted">'+dL(x.date)+'</div><div class="t">'+esc(x.title)+'</div>'+(x.body?'<p>'+esc(x.body)+'</p>':'')+'</div>';}).join("")+'</div>';
+}
+function today(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);}
+
+function login(apt,pin,remember){
+  S.lastApt=apt; S.busy=true;S.err="";render();
+  return call("getBill",apt,pin).then(function(r){
+    S.busy=false;
+    if(r&&r.error){ S.bill=null; S.err=r.error=="locked"?t("locked"):t("wrong",{n:r.triesLeft}); lsSet("cred",null); }
+    else { S.bill=r; if(remember){S.cred={apt:apt,pin:pin};lsSet("cred",S.cred);} }
+    render();
+  },function(){S.busy=false;S.err=t("loadErr");render();});
+}
+document.addEventListener("change",function(e){if(e.target.id=="rp"){S.rp=e.target.value;render();}});
+window.addEventListener("hashchange",function(){var h=decodeURIComponent((location.hash||"").slice(1));if(DATA&&h.indexOf("bill-")===0&&DATA.bills[h.slice(5)]){S.tab="bill";login(h.slice(5),"",false);window.scrollTo(0,0);}});
+document.addEventListener("submit",function(e){ if(e.target.id!="lf")return; e.preventDefault(); login(document.getElementById("apt").value,"",document.getElementById("rem").checked); });
+document.addEventListener("click",function(e){var b=e.target.closest("[data-a]");if(!b)return;var a=b.getAttribute("data-a"),v=b.getAttribute("data-v");
+  if(a=="lang"){S.lang=v;lsSet("lang",v);render();}
+  else if(a=="tab"){S.tab=v;render();}
+  else if(a=="pushOn"){enablePush(document.getElementById("papt").value);}
+  else if(a=="pushEdit"){S.pushEdit=true;render();}
+  else if(a=="openApt"){S.tab="bill";login(v,"",false);window.scrollTo(0,0);}
+  else if(a=="logout"){S.bill=null;S.cred=null;lsSet("cred",null);render();}
+});
+var tip=document.getElementById("tip");
+document.addEventListener("mousemove",function(e){var el=e.target.closest&&e.target.closest("[data-tip]");if(!el){tip.style.opacity=0;return;}tip.textContent=el.getAttribute("data-tip");tip.style.left=Math.min(window.innerWidth-tip.offsetWidth-8,e.clientX+12)+"px";tip.style.top=(e.clientY+14)+"px";tip.style.opacity=1;});
+
+render();
+fetch("data.json?v="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(d){
+  DATA=d;
+  return call("getOverview").then(function(o){S.ov=o;
+    var h=decodeURIComponent((location.hash||"").slice(1));
+    if(h.indexOf("bill-")===0&&DATA.bills[h.slice(5)]){S.tab="bill";login(h.slice(5),"",false);}
+    else { render(); if(S.cred) login(S.cred.apt,S.cred.pin,true); }
+  });
+}).catch(function(){S.ovErr=true;render();});
+</script>
+</body>
+</html>

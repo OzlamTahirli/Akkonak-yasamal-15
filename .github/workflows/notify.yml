@@ -1,0 +1,30 @@
+name: Notifications
+
+on:
+  push:
+    branches: [main]
+    paths: [data.json]
+  schedule:
+    - cron: "0 5 * * *"   # every day 09:00 Baku time — payment reminders
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "push (bills ready / announcements) or daily (reminders)"
+        default: daily
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Send notifications
+        run: node scripts/notify.mjs ${{ github.event_name == 'schedule' && 'daily' || github.event.inputs.mode || 'push' }}
+        env:
+          ONESIGNAL_APP_ID: ${{ vars.ONESIGNAL_APP_ID }}
+          ONESIGNAL_REST_KEY: ${{ secrets.ONESIGNAL_REST_KEY }}
+          SITE_URL: ${{ vars.SITE_URL }}

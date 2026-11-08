@@ -1,0 +1,16 @@
+{
+  "name": "Yasamal 15 MMMC",
+  "short_name": "Yasamal 15",
+  "description": "Bina maliyyəsi, aylıq hesablar və elanlar",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f3ef",
+  "theme_color": "#1c5cab",
+  "lang": "az",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
