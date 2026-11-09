@@ -5,13 +5,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#1c5cab">
+<meta name="robots" content="noindex,nofollow">
 <meta name="description" content="Yasamal 15 MMMC — bina maliyyəsi, aylıq hesablar və elanlar">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Akkonak Alert">
-<script src="config.js?v=1794241407"></script>
+<script src="config.js?v=1794242196"></script>
 <script>
 window.OneSignalDeferred = window.OneSignalDeferred || [];
 if (window.ONESIGNAL_APP_ID) {
@@ -209,7 +210,7 @@ function cats(o){
 }
 function viewBill(){
   if(!S.bill){
-    var opts=S.ov.apartments.map(function(a){var sel=(S.lastApt||(S.cred&&S.cred.apt))==a?" selected":"";return '<option value="'+esc(a)+'"'+sel+'>'+esc(a)+'</option>';}).join("");
+    var opts=S.ov.apartments.map(function(a){var sel=(S.lastApt||(S.cred&&S.cred.apt))==a?" selected":"";return '<option value="'+esc(a)+'"'+sel+'>'+esc(a)+(DATA.names&&DATA.names[a]?' — '+esc(DATA.names[a]):'')+'</option>';}).join("");
     return '<div class="card" style="max-width:480px"><h2>'+t("login")+'</h2><p class="hint">'+t("loginHint")+'</p><form id="lf" class="row">'+
       '<div class="field"><label for="apt">'+t("apt")+'</label><select id="apt">'+opts+'</select></div>'+
 
@@ -219,7 +220,7 @@ function viewBill(){
   var b=S.bill, list=b.bills, owe=list.reduce(function(s,x){return s+x.left;},0), overdue=list.filter(function(x){return x.status=="overdue";}).reduce(function(s,x){return s+x.left;},0);
   var nextDue=list.filter(function(x){return x.left>0;}).map(function(x){return x.due;}).sort()[0], latest=list[0];
   var h=overdue>0?'<div class="banner crit">'+t("bannerOverdue",{a:money(overdue)})+'</div>':"";
-  h+='<div class="grid two"><div class="card"><div style="display:flex;align-items:center"><h2 style="flex:1">'+t("aptN",{n:esc(b.apt)})+'</h2><button class="btn" data-a="logout" style="padding:5px 10px;font-size:13px">'+t("change")+'</button></div>'+
+  h+='<div class="grid two"><div class="card"><div style="display:flex;align-items:center"><h2 style="flex:1">'+t("aptN",{n:esc(b.apt)})+(DATA.names&&DATA.names[b.apt]?'<div class="small muted" style="font-weight:600">'+esc(DATA.names[b.apt])+'</div>':'')+'</h2><button class="btn" data-a="logout" style="padding:5px 10px;font-size:13px">'+t("change")+'</button></div>'+
     '<div class="label mt">'+t("youOwe")+'</div><div class="big">'+money(owe)+'</div><div class="foot">'+(owe>0?(nextDue?pill(nextDue<today()?"overdue":"unpaid")+" &nbsp;"+t("dueBy",{d:dL(nextDue)}):""):pill("paid")+" &nbsp;"+t("allPaid"))+'</div>'+
     '<h2 class="mt">'+t("howToPay")+'</h2><div class="paybox" style="margin-top:8px">'+esc(b.payInfo||"—")+'</div></div>';
   h+='<div class="card">'+(latest?'<div style="display:flex;align-items:flex-start;gap:8px"><div style="flex:1"><h2>'+t("latest")+': '+esc(pL(latest.period))+'</h2><p class="hint">'+t("dueBy",{d:dL(latest.due)})+'</p></div>'+pill(latest.status)+'</div>'+breakdown(latest):'<div class="empty">'+t("noBills")+'</div>')+'</div></div>';
@@ -244,7 +245,7 @@ function viewReport(){
   var sel=ps.length>1?'<select id="rp">'+ps.map(function(x){return '<option value="'+x+'"'+(x===p?' selected':'')+'>'+esc(pL(x))+'</option>';}).join("")+'</select>':'';
   var h='<div class="card"><div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap"><div style="flex:1"><h2>'+t("report")+': '+esc(pL(p))+'</h2><p class="hint">'+t("reportHint")+'</p></div>'+sel+'</div>'+
    '<div class="scroll"><table><thead><tr><th>'+t("apt")+'</th><th class="num">'+t("kommunal")+'</th><th class="num">'+t("prevR")+'</th><th class="num">'+t("curR")+'</th><th class="num">'+t("kwhCol")+'</th><th class="num">'+t("elec")+'</th><th class="num">'+t("parking")+'</th><th class="num">'+t("total")+'</th><th class="num">'+t("paid")+'</th><th>'+t("status")+'</th></tr></thead><tbody>'+
-   list.map(function(b){return '<tr data-a="openApt" data-v="'+esc(b.apt)+'" style="cursor:pointer"><td><b>'+esc(b.apt)+'</b></td><td class="num">'+money(b.kommunal)+'</td><td class="num muted">'+(b.prev!=null?b.prev:"—")+'</td><td class="num muted">'+(b.cur!=null?b.cur:"—")+'</td><td class="num">'+(b.kwh!=null?b.kwh:"—")+'</td><td class="num">'+money(b.elec)+'</td><td class="num">'+(b.parking?money(b.parking):"—")+'</td><td class="num"><b>'+money(b.total)+'</b></td><td class="num">'+money(b.paid)+'</td><td>'+pill(b.status)+'</td></tr>';}).join("")+
+   list.map(function(b){return '<tr data-a="openApt" data-v="'+esc(b.apt)+'" style="cursor:pointer"><td><b>'+esc(b.apt)+'</b>'+(DATA.names&&DATA.names[b.apt]?'<div class="small muted" style="white-space:nowrap">'+esc(DATA.names[b.apt])+'</div>':'')+'</td><td class="num">'+money(b.kommunal)+'</td><td class="num muted">'+(b.prev!=null?b.prev:"—")+'</td><td class="num muted">'+(b.cur!=null?b.cur:"—")+'</td><td class="num">'+(b.kwh!=null?b.kwh:"—")+'</td><td class="num">'+money(b.elec)+'</td><td class="num">'+(b.parking?money(b.parking):"—")+'</td><td class="num"><b>'+money(b.total)+'</b></td><td class="num">'+money(b.paid)+'</td><td>'+pill(b.status)+'</td></tr>';}).join("")+
    '<tr style="background:var(--surface-2)"><td><b>'+t("total")+'</b></td><td class="num"><b>'+money(sm("kommunal"))+'</b></td><td></td><td></td><td class="num"><b>'+sm("kwh")+'</b></td><td class="num"><b>'+money(sm("elec"))+'</b></td><td class="num"><b>'+money(sm("parking"))+'</b></td><td class="num"><b>'+money(sm("total"))+'</b></td><td class="num"><b>'+money(sm("paid"))+'</b></td><td></td></tr></tbody></table></div></div>';
   return h;
 }
@@ -258,7 +259,7 @@ function pushCard(){
   if(!("Notification" in window)||!("serviceWorker" in navigator)) return '<div class="card push"><span class="ic">🔕</span><div class="tx">'+t("pushNA")+'</div></div>';
   if(!on&&Notification.permission==="denied"&&!S.pushMsg) S.pushMsg=deniedHelp();
   var cur=apt||(S.cred&&S.cred.apt)||"";
-  var opts=S.ov.apartments.map(function(a){return '<option value="'+esc(a)+'"'+(a===cur?" selected":"")+'>'+esc(a)+'</option>';}).join("");
+  var opts=S.ov.apartments.map(function(a){return '<option value="'+esc(a)+'"'+(a===cur?" selected":"")+'>'+esc(a)+(DATA.names&&DATA.names[a]?' — '+esc(DATA.names[a]):'')+'</option>';}).join("");
   return '<div class="card push"><span class="ic">🔔</span><div class="tx"><b>'+t("pushTitle")+'</b>'+t("pushText")+(S.pushMsg?'<div class="err">'+esc(S.pushMsg)+'</div>':'')+'</div>'+
     '<div class="row"><div class="field"><label for="papt">'+t("apt")+'</label><select id="papt">'+opts+'</select></div><button class="btn primary" data-a="pushOn" '+(S.pushBusy?"disabled":"")+'>'+(S.pushBusy?t("pushWait"):t("pushBtn"))+'</button></div></div>';
 }
