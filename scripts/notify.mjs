@@ -30,7 +30,7 @@ async function send({ title, body, url, apt }) {
     app_id: APP_ID, target_channel: "push",
     headings: { en: title }, contents: { en: body },
     url: url || SITE || undefined,
-    ...(apt ? { filters: [{ field: "tag", key: "apt", relation: "=", value: String(apt) }] } : { included_segments: ["Subscribed Users"] }),
+    ...(apt ? { filters: [{ field: "tag", key: "apt", relation: "=", value: String(apt) }] } : { included_segments: ["Total Subscriptions"] }),
   };
   if (DRY) { console.log("[dry-run]", JSON.stringify({ title, body, url: payload.url, to: apt ? "apt " + apt : "everyone" })); sent++; return; }
   const r = await fetch("https://api.onesignal.com/notifications?c=push", {
@@ -53,6 +53,9 @@ if (mode === "push") {
   if (prev) for (const n of data.ov.notices || []) {
     if (!old.has(key(n)) && !/hesabları hazırdır/i.test(n.title)) await send({ title: `📣 ${n.title}`, body: (n.body || "").slice(0, 180), url: SITE });
   }
+} else if (mode === "latest-notice") {
+  const n = (data.ov.notices || [])[0];
+  if (n) await send({ title: `📣 ${n.title}`, body: (n.body || "").slice(0, 180), url: SITE });
 } else if (mode === "daily") {
   for (const [apt, list] of Object.entries(data.bills)) {
     const left = (b) => Math.max(0, (b.total || 0) - (b.paid || 0));

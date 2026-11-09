@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "push (bills ready / announcements) or daily (reminders)"
+        description: "push (bills ready / announcements), daily (reminders) or latest-notice (re-send newest announcement)"
         default: daily
 
 jobs:
