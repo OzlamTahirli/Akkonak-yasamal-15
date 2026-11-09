@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#1c5cab">
+<title>İdarə paneli — Yasamal-15 MMMC</title>
+<link rel="icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js?v=admin1"></script>
+<script src="data-source.js?v=admin1"></script>
+<style>
+:root{color-scheme:light;--bg:#f4f3ef;--surface:#fcfcfb;--surface-2:#f0efec;--line:#e2e0da;--text:#0b0b0b;--text-2:#52514e;--muted:#85837d;
+ --accent:#1c5cab;--accent-soft:#e3eefb;--on-accent:#fff;--good:#0ca30c;--good-soft:#e4f4e4;--warning:#fab219;--warn-soft:#fdf2d9;--critical:#d03b3b;--crit-soft:#fbe6e6}
+@media (prefers-color-scheme:dark){:root{color-scheme:dark;--bg:#121211;--surface:#1a1a19;--surface-2:#242422;--line:#33332f;--text:#f0efec;--text-2:#c3c2b7;--muted:#8e8d86;
+ --accent:#5598e7;--accent-soft:#1c2a3d;--on-accent:#0b0b0b;--good-soft:#1b2c1b;--warn-soft:#33290f;--crit-soft:#3a1d1d}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Manrope,system-ui,sans-serif;font-size:15px;line-height:1.45}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1100px;margin:0 auto;padding:16px 12px 70px}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.logo{width:40px;height:40px;border-radius:11px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-weight:800}
+h1{margin:0;font-size:18px;font-weight:800}.sub{color:var(--text-2);font-size:13px}.spacer{flex:1}
+nav{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px;overflow-x:auto}
+nav button{border:0;background:none;padding:10px 13px;cursor:pointer;font-weight:700;color:var(--text-2);border-bottom:2px solid transparent;white-space:nowrap}
+nav button.on{color:var(--text);border-bottom-color:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
+.card h2{margin:0 0 8px;font-size:15px;font-weight:800}
+.hint{color:var(--muted);font-size:12.5px;margin:0 0 10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}.field label{font-size:12px;color:var(--text-2);font-weight:700}
+input,select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:8px 10px;min-width:0}
+textarea{width:100%;min-height:80px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.btn{border:1px solid var(--line);background:var(--surface);padding:7px 12px;border-radius:9px;cursor:pointer;font-weight:700;font-size:13.5px;white-space:nowrap}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.good{background:var(--good);border-color:var(--good);color:#fff}
+.btn.sm{padding:4px 9px;font-size:12.5px}.btn.danger{color:var(--critical)}
+.btn[disabled]{opacity:.5;cursor:wait}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:12px;color:var(--text-2);font-weight:700;padding:7px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.scroll{overflow-x:auto}.small{font-size:12.5px}.muted{color:var(--muted)}
+.status{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.st-paid{background:var(--good-soft)}.st-partial{background:var(--warn-soft)}.st-unpaid{background:var(--surface-2)}.st-overdue{background:var(--crit-soft)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+@media(max-width:700px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px}.kpi b{display:block;font-size:20px}
+.kpi span{font-size:12px;color:var(--text-2);font-weight:600}
+.inline{background:var(--surface-2);border-radius:10px;padding:10px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--surface);padding:10px 16px;border-radius:12px;font-weight:700;z-index:9;max-width:92vw}
+.center{max-width:420px;margin:60px auto}
+.tbl-in{width:96px;padding:5px 7px}
+.err{color:var(--critical);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"><div class="card center">Yüklənir…</div></div>
+<script>
+"use strict";
+var sb=null, ME=null, D=null, RAW=null;
+var UI={tab:"pay",period:null,payFor:null,clearFor:null,q:"",np:null,busy:false,delN:null,delE:null};
+var MON=["Yanvar","Fevral","Mart","Aprel","May","İyun","İyul","Avqust","Sentyabr","Oktyabr","Noyabr","Dekabr"];
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function pad(n){return("0"+n).slice(-2);}
+function today(){var d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
+function addM(p,n){var y=+p.slice(0,4),m=+p.slice(5,7)+n;while(m<1){m+=12;y--;}while(m>12){m-=12;y++;}return y+"-"+pad(m);}
+function pL(p){return p?MON[+p.slice(5,7)-1]+" "+p.slice(0,4):"";}
+function money(n){return(Math.round((+n||0)*100)/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})+" ₼";}
+function r1(n){return Math.round((+n||0)*10+1e-9)/10;}
+function toast(m){var t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove();},2600);}
+var STL={paid:"Ödənilib",partial:"Qismən",unpaid:"Ödənilməyib",overdue:"Gecikib"};
+function pill(s){return '<span class="status st-'+s+'">'+({paid:"✓",partial:"◐",unpaid:"○",overdue:"!"}[s])+' '+STL[s]+'</span>';}
+var $=function(id){return document.getElementById(id);};
+
+/* ---------------- auth ---------------- */
+function boot(){
+  if(!window.SUPABASE_URL||!window.SUPABASE_ANON_KEY){$("app").innerHTML='<div class="card center">Panel hələ qurulmayıb.</div>';return;}
+  sb=supabase.createClient(window.SUPABASE_URL,window.SUPABASE_ANON_KEY);
+  sb.auth.onAuthStateChange(function(ev,session){ if(ev==="SIGNED_OUT"){ME=null;D=null;viewLogin();} else if(session&&!ME){ setTimeout(function(){afterLogin(session);},0); } });
+  sb.auth.getSession().then(function(r){ var s=r.data.session; if(s) afterLogin(s); else viewLogin(); });
+}
+function viewLogin(msg){
+  $("app").innerHTML='<div class="card center"><h2>İdarə paneli — giriş</h2><p class="hint">Komitə üzvünün e-poçtunu yazın. Giriş linki e-poçtunuza göndəriləcək.</p>'+
+   '<form id="lf" class="row"><div class="field" style="flex:1"><label for="em">E-poçt</label><input id="em" type="email" required autocomplete="email" placeholder="ad@gmail.com"></div><button class="btn primary">Link göndər</button></form>'+
+   (msg?'<p class="small" style="margin-top:12px">'+msg+'</p>':'')+'<p class="small muted" style="margin-top:14px"><a href="./">← Sakinlər üçün sayt</a></p></div>';
+  $("lf").onsubmit=function(e){e.preventDefault();var em=$("em").value.trim();if(!em)return;
+    var b=this.querySelector("button");b.disabled=true;
+    sb.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.origin+location.pathname}}).then(function(r){
+      if(r.error) viewLogin('<span class="err">Xəta: '+esc(r.error.message)+'</span>');
+      else viewLogin('✅ Link <b>'+esc(em)+'</b> ünvanına göndərildi. E-poçtunuzu açıb linkə toxunun (spam qovluğunu da yoxlayın).');
+    });};
+}
+function afterLogin(session){
+  ME=session.user;
+  sb.rpc("is_admin").then(function(r){
+    if(r.error||!r.data){ $("app").innerHTML='<div class="card center"><h2>İcazə yoxdur</h2><p><b>'+esc(ME.email)+'</b> komitə siyahısında deyil.</p><button class="btn" id="lo">Çıxış</button></div>'; $("lo").onclick=function(){sb.auth.signOut();}; return; }
+    load();
+  });
+}
+/* ---------------- data ---------------- */
+function q(t,sel,mod){var x=sb.from(t).select(sel||"*");return mod?mod(x):x;}
+function load(){
+  return Promise.all([q("settings","key,value"),q("apartments","*",function(x){return x.order("ord");}),q("bills","*",function(x){return x.order("period");}),
+    q("payments","id,bill_id,amount,paid_at,method,created_by"),q("notices","*",function(x){return x.order("date",{ascending:false}).order("id",{ascending:false});}),
+    q("expenses","*",function(x){return x.order("date",{ascending:false}).order("id",{ascending:false});})]).then(function(r){
+    var bad=r.filter(function(x){return x.error;}); if(bad.length){toast("Yükləmə xətası: "+bad[0].error.message);return;}
+    RAW={settings:r[0].data,apartments:r[1].data,bills:r[2].data,payments:r[3].data,notices:r[4].data,expenses:r[5].data};
+    D=buildData(RAW);
+    var ps=periods(); if(!UI.period||ps.indexOf(UI.period)<0) UI.period=ps[0]||null;
+    render();
+  });
+}
+function periods(){var s={};(RAW.bills||[]).forEach(function(b){s[b.period]=1;});return Object.keys(s).sort().reverse();}
+function billsOf(p){var out=[];D.order.forEach(function(a){(D.bills[a]||[]).forEach(function(b){if(b.period===p)out.push(b);});});return out;}
+function act(promise,okMsg){UI.busy=true;render();return promise.then(function(r){UI.busy=false;if(r&&r.error){toast("Xəta: "+r.error.message);render();return false;}if(okMsg)toast(okMsg);return load().then(function(){return true;});});}
+
+/* ---------------- views ---------------- */
+function render(){
+  if(!D) return;
+  var tabs=[["pay","💳 Ödənişlər"],["month","🧾 Yeni ay / sayğac"],["news","📣 Elanlar"],["exp","📊 Xərclər"]];
+  var h='<header><div class="logo">YM</div><div><h1>İdarə paneli</h1><div class="sub">'+esc(D.ov.building)+'</div></div><div class="spacer"></div>'+
+    '<span class="small muted">'+esc(ME.email)+'</span><a class="btn sm" href="./" target="_blank">Sayt ↗</a><button class="btn sm" data-a="logout">Çıxış</button></header>'+
+    '<nav>'+tabs.map(function(t){return '<button data-a="tab" data-v="'+t[0]+'" class="'+(UI.tab===t[0]?"on":"")+'">'+t[1]+'</button>';}).join("")+'</nav>';
+  h+=({pay:vPay,month:vMonth,news:vNews,exp:vExp})[UI.tab]();
+  var a=document.activeElement, keep=a&&a.id?{id:a.id,v:a.value,s:a.selectionStart}:null;
+  $("app").innerHTML=h;
+  if(keep&&$(keep.id)&&keep.id==="q"){var el=$(keep.id);el.focus();try{el.setSelectionRange(keep.s,keep.s);}catch(e){}}
+}
+function vPay(){
+  var ps=periods(); if(!ps.length) return '<div class="card">Hələ hesab yoxdur. "Yeni ay" bölməsindən yaradın.</div>';
+  var list=billsOf(UI.period), ql=UI.q.toLowerCase();
+  var billed=0,paid=0,left=0,nPaid=0; list.forEach(function(b){billed+=b.total;paid+=Math.min(b.paid,b.total);left+=b.left;if(b.status==="paid")nPaid++;});
+  var shown=list.filter(function(b){return !ql||b.apt.toLowerCase().indexOf(ql)===0||(D.names[b.apt]||"").toLowerCase().indexOf(ql)>=0;});
+  var h='<div class="row" style="margin-bottom:12px"><div class="field"><label for="per">Dövr</label><select id="per">'+ps.map(function(p){return '<option value="'+p+'"'+(p===UI.period?" selected":"")+'>'+pL(p)+'</option>';}).join("")+'</select></div>'+
+    '<div class="field" style="flex:1;min-width:160px"><label for="q">Axtar (mənzil və ya ad)</label><input id="q" value="'+esc(UI.q)+'" placeholder="məs. 27 və ya Bəkirova"></div></div>';
+  h+='<div class="kpis"><div class="kpi"><span>Hesablanıb</span><b>'+money(billed)+'</b></div><div class="kpi"><span>Yığılıb</span><b>'+money(paid)+'</b></div><div class="kpi"><span>Qalıq borc</span><b>'+money(left)+'</b></div><div class="kpi"><span>Ödəyən mənzil</span><b>'+nPaid+' / '+list.length+'</b></div></div>';
+  h+='<div class="card scroll"><table><thead><tr><th>Mənzil</th><th class="num">Cəmi</th><th class="num">Ödənilib</th><th class="num">Qalıq</th><th>Status</th><th></th></tr></thead><tbody>';
+  shown.forEach(function(b){
+    h+='<tr><td><b>'+esc(b.apt)+'</b><div class="small muted">'+esc(D.names[b.apt]||"")+'</div></td><td class="num">'+money(b.total)+'</td><td class="num">'+money(b.paid)+(b.paidDate?'<div class="small muted">'+esc(b.paidDate)+'</div>':'')+'</td><td class="num"><b>'+money(b.left)+'</b></td><td>'+pill(b.status)+'</td><td class="num">';
+    if(b.left>0) h+='<button class="btn sm good" data-a="payFull" data-v="'+b.id+'" '+(UI.busy?"disabled":"")+'>✓ Ödənildi</button> <button class="btn sm" data-a="payOpen" data-v="'+b.id+'" title="Qismən ödəniş">…</button> ';
+    if(b.payments&&b.payments.length) h+=(UI.clearFor===b.id?'<button class="btn sm danger" data-a="clearYes" data-v="'+b.id+'">Sil?</button> <button class="btn sm" data-a="clearNo">Xeyr</button>':'<button class="btn sm" data-a="clearAsk" data-v="'+b.id+'" title="Ödənişləri sil">↺</button>');
+    h+='</td></tr>';
+    if(UI.payFor===b.id) h+='<tr><td colspan="6"><div class="inline row"><div class="field"><label for="pa">Məbləğ</label><input id="pa" type="number" step="0.01" min="0" value="'+b.left+'" class="tbl-in"></div>'+
+      '<div class="field"><label for="pd">Tarix</label><input id="pd" type="date" value="'+today()+'"></div><div class="field"><label for="pm">Üsul</label><select id="pm"><option value="bank">Bank</option><option value="cash">Nağd</option><option value="card">Kart</option></select></div>'+
+      '<button class="btn primary" data-a="paySave" data-v="'+b.id+'">Yadda saxla</button><button class="btn" data-a="payCancel">Ləğv</button></div></td></tr>';
+  });
+  return h+'</tbody></table></div><p class="small muted">"✓ Ödənildi" qalan məbləği bu günün tarixi ilə bank ödənişi kimi qeyd edir. Qismən ödəniş və ya başqa tarix üçün "…" düyməsini seçin. Sakinlərin saytında status dərhal yenilənir.</p>';
+}
+function vMonth(){
+  var ps=periods(), last=ps[0]||null, S=D.settings||{}, tariff=+S.elec_tariff||0.125, pfee=+S.parking_fee||0, dueDay=+S.due_day||10;
+  if(!UI.np) UI.np=last?addM(last,1):today().slice(0,7);
+  var p=UI.np, exist=ps.indexOf(p)>=0, prevP=addM(p,-1);
+  var byApt={}; (RAW.bills||[]).forEach(function(b){(byApt[b.apt]=byApt[b.apt]||{})[b.period]=b;});
+  var due=addM(p,1)+"-"+pad(dueDay);
+  var h='<div class="card"><h2>'+(exist?'Sayğac göstəricilərini redaktə et':'Yeni ayın hesabları')+'</h2><p class="hint">'+(exist?'Bu ayın hesabları artıq var. Dəyişiklikləri yazıb "Yadda saxla" basın.':'Hər mənzil üçün cari sayğac göstəricisini yazın. Əvvəlki göstərici ötən aydan avtomatik götürülür. Elektrik və cəmi avtomatik hesablanır.')+'</p>'+
+   '<div class="row"><div class="field"><label for="np">Dövr</label><input id="np" type="month" value="'+p+'"></div><div class="field"><label for="nd">Son ödəniş tarixi</label><input id="nd" type="date" value="'+(exist&&byApt[D.order[0]]&&byApt[D.order[0]][p]?byApt[D.order[0]][p].due:due)+'"></div>'+
+   '<div class="field"><label>Tarif</label><input disabled value="'+tariff+' ₼/kVt·s" style="width:130px"></div>'+(exist?'':'<label class="small" style="padding-bottom:9px"><input type="checkbox" id="nn" checked style="padding:0"> Sakinlərə bildiriş göndər</label>')+'</div></div>';
+  h+='<div class="card scroll"><table><thead><tr><th>Mənzil</th><th class="num">Kommunal</th><th>Parkinq</th><th class="num">Əvvəlki</th><th>İndiki</th><th class="num">kVt·s</th><th class="num">Elektrik</th><th class="num">Cəmi</th></tr></thead><tbody>';
+  D.order.forEach(function(apt,i){
+    var a=(RAW.apartments||[]).filter(function(x){return x.apt===apt;})[0]||{}, e=(byApt[apt]||{})[p], pb=(byApt[apt]||{})[prevP];
+    var kom=e?+e.kommunal:+a.kommunal, park=e?(+e.parking>0):!!a.parking, prev=e?e.prev:(pb?(pb.cur!=null?pb.cur:pb.prev):null), cur=e?e.cur:null;
+    h+='<tr data-apt="'+esc(apt)+'" data-prev="'+(prev==null?"":prev)+'"><td><b>'+esc(apt)+'</b><div class="small muted">'+esc(D.names[apt]||"")+'</div></td>'+
+      '<td class="num"><input class="tbl-in m-kom" type="number" step="0.01" value="'+kom+'" style="width:84px"></td>'+
+      '<td><input type="checkbox" class="m-park" '+(park?"checked":"")+' style="padding:0"></td>'+
+      '<td class="num muted">'+(prev==null?"—":prev)+'</td><td><input class="tbl-in m-cur" type="number" step="1" inputmode="numeric" value="'+(cur==null?"":cur)+'" data-i="'+i+'"></td>'+
+      '<td class="num m-kwh"></td><td class="num m-elec"></td><td class="num m-tot"><b></b></td></tr>';
+  });
+  h+='</tbody><tfoot><tr><td colspan="6"><b>Cəmi</b></td><td class="num" id="sumE"></td><td class="num"><b id="sumT"></b></td></tr></tfoot></table></div>'+
+   '<div class="row"><div class="spacer"></div><span class="small err" id="merr"></span><button class="btn primary" data-a="monthSave" '+(UI.busy?"disabled":"")+'>'+(exist?'Yadda saxla':'Hesabları yarat')+'</button></div>';
+  setTimeout(recalcMonth,0);
+  return h;
+}
+function recalcMonth(){
+  var S=D.settings||{}, tariff=+S.elec_tariff||0.125, pfee=+S.parking_fee||0, sumE=0,sumT=0,bad=0;
+  document.querySelectorAll("tr[data-apt]").forEach(function(tr){
+    var prev=tr.getAttribute("data-prev"), cur=tr.querySelector(".m-cur").value, kom=+tr.querySelector(".m-kom").value||0, park=tr.querySelector(".m-park").checked?pfee:0;
+    var kwh=(prev!==""&&cur!=="")?(+cur-+prev):null; if(kwh!=null&&kwh<0){bad++;tr.querySelector(".m-cur").style.outline="2px solid var(--critical)";}else tr.querySelector(".m-cur").style.outline="";
+    var el=kwh!=null&&kwh>=0?r1(kwh*tariff):0, tot=kom+el+park; sumE+=el; sumT+=tot;
+    tr.querySelector(".m-kwh").textContent=kwh==null?"—":kwh; tr.querySelector(".m-elec").textContent=money(el); tr.querySelector(".m-tot b").textContent=money(tot);
+  });
+  if($("sumE")){$("sumE").textContent=money(sumE);$("sumT").textContent=money(sumT);$("merr").textContent=bad?bad+" mənzildə indiki göstərici əvvəlkindən azdır":"";}
+}
+function saveMonth(){
+  var p=$("np").value, due=$("nd").value, S=D.settings||{}, tariff=+S.elec_tariff||0.125, pfee=+S.parking_fee||0, rows=[], aptUpd=[], bad=0;
+  if(!/^\d{4}-\d{2}$/.test(p)){toast("Dövrü seçin");return;}
+  document.querySelectorAll("tr[data-apt]").forEach(function(tr){
+    var apt=tr.getAttribute("data-apt"), prev=tr.getAttribute("data-prev"), cur=tr.querySelector(".m-cur").value, kom=+tr.querySelector(".m-kom").value||0, park=tr.querySelector(".m-park").checked;
+    var kwh=(prev!==""&&cur!=="")?(+cur-+prev):null; if(kwh!=null&&kwh<0) bad++;
+    rows.push({period:p,apt:apt,kommunal:kom,prev:prev===""?null:+prev,cur:cur===""?null:+cur,tariff:tariff,elec:kwh!=null&&kwh>=0?r1(kwh*tariff):0,parking:park?pfee:0,due:due||null});
+    var ar=(RAW.apartments||[]).filter(function(x){return x.apt===apt;})[0]||{}; if(+ar.kommunal!==kom||!!ar.parking!==park) aptUpd.push({apt:apt,kommunal:kom,parking:park});
+  });
+  if(bad){toast("Səhv göstəriciləri düzəldin");return;}
+  var exist=periods().indexOf(p)>=0, notify=!exist&&$("nn")&&$("nn").checked;
+  var chain=sb.from("bills").upsert(rows,{onConflict:"period,apt"}).then(function(r){
+    if(r.error) return r;
+    return Promise.all(aptUpd.map(function(u){return sb.from("apartments").update({kommunal:u.kommunal,parking:u.parking}).eq("apt",u.apt);})).then(function(){
+      if(!notify) return {};
+      var dl=due?(+due.slice(8,10))+" "+MON[+due.slice(5,7)-1]:"";
+      return sb.from("notices").insert({title:pL(p)+" hesabları hazırdır",body:"Hesabınıza saytda baxa bilərsiniz (Kommunal + Elektrik + Parkinq)."+(dl?" Son ödəniş tarixi: "+dl+".":""),push:true});
+    });
+  });
+  act(chain,exist?"Yadda saxlanıldı":"Hesablar yaradıldı"+(notify?" və bildiriş göndərildi":"")).then(function(ok){if(ok){UI.period=p;}});
+}
+function vNews(){
+  var h='<div class="card"><h2>Yeni elan</h2><div class="field"><label for="nt">Başlıq</label><input id="nt" placeholder="məs. Lift təmiri"></div>'+
+   '<div class="field" style="margin-top:8px"><label for="nb">Mətn</label><textarea id="nb" placeholder="məs. Şənbə 10:00–14:00 lift işləməyəcək."></textarea></div>'+
+   '<div class="row" style="margin-top:8px"><label class="small"><input type="checkbox" id="np2" checked style="padding:0"> Push bildiriş göndər</label><div class="spacer"></div><button class="btn primary" data-a="newsAdd" '+(UI.busy?"disabled":"")+'>📣 Dərc et</button></div></div>';
+  h+='<div class="card"><h2>Elanlar</h2>'+((RAW.notices||[]).length?'<table><tbody>'+RAW.notices.map(function(n){return '<tr><td class="small muted" style="white-space:nowrap">'+esc(n.date)+'</td><td><b>'+esc(n.title)+'</b><div class="small" style="white-space:pre-wrap">'+esc(n.body||"")+'</div></td><td class="num">'+(UI.delN===n.id?'<button class="btn sm danger" data-a="newsDelYes" data-v="'+n.id+'">Sil?</button> <button class="btn sm" data-a="delNo">Xeyr</button>':'<button class="btn sm danger" data-a="newsDel" data-v="'+n.id+'">✕</button>')+'</td></tr>';}).join("")+'</tbody></table>':'<p class="muted">Elan yoxdur.</p>')+'</div>';
+  return h;
+}
+function vExp(){
+  var cats=["Azərişıq","Qaz","Su","Lift","Zibil","Əmək haqqı","Mühafizə","DSMF","Bank xərci","Təmir","Təmizlik","İcarə gəliri","Digər"];
+  var h='<div class="card"><h2>Xərc / gəlir əlavə et</h2><div class="row"><div class="field"><label for="xd">Tarix</label><input id="xd" type="date" value="'+today()+'"></div>'+
+   '<div class="field"><label for="xt">Növ</label><select id="xt"><option value="expense">Xərc</option><option value="income">Gəlir</option></select></div>'+
+   '<div class="field"><label for="xc">Kateqoriya</label><input id="xc" list="cl" style="width:150px"><datalist id="cl">'+cats.map(function(c){return '<option value="'+c+'">';}).join("")+'</datalist></div>'+
+   '<div class="field"><label for="xa">Məbləğ</label><input id="xa" type="number" step="0.01" min="0" style="width:110px"></div>'+
+   '<div class="field" style="flex:1;min-width:160px"><label for="xn">Qeyd</label><input id="xn"></div><button class="btn primary" data-a="expAdd" '+(UI.busy?"disabled":"")+'>Əlavə et</button></div>'+
+   '<p class="hint" style="margin-top:8px">Sakinlərin aylıq ödənişləri avtomatik gəlir sayılır, onları burada əlavə etməyin.</p></div>';
+  var ex=RAW.expenses||[];
+  h+='<div class="card scroll"><h2>Son əməliyyatlar</h2>'+(ex.length?'<table><thead><tr><th>Tarix</th><th>Kateqoriya</th><th>Qeyd</th><th class="num">Məbləğ</th><th></th></tr></thead><tbody>'+ex.slice(0,60).map(function(x){return '<tr><td>'+esc(x.date)+'</td><td>'+esc(x.category||"")+'</td><td class="small">'+esc(x.note||"")+'</td><td class="num">'+(x.type==="income"?"+":"−")+money(x.amount)+'</td><td class="num">'+(UI.delE===x.id?'<button class="btn sm danger" data-a="expDelYes" data-v="'+x.id+'">Sil?</button> <button class="btn sm" data-a="delNo">Xeyr</button>':'<button class="btn sm danger" data-a="expDel" data-v="'+x.id+'">✕</button>')+'</td></tr>';}).join("")+'</tbody></table>':'<p class="muted">Hələ yoxdur.</p>')+'</div>';
+  return h;
+}
+function findBill(id){id=+id;var r=null;Object.keys(D.bills).forEach(function(a){D.bills[a].forEach(function(b){if(b.id===id)r=b;});});return r;}
+
+/* ---------------- events ---------------- */
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-a]"); if(!b||!D) return; var a=b.getAttribute("data-a"), v=b.getAttribute("data-v");
+  if(a==="tab"){UI.tab=v;UI.payFor=null;render();}
+  else if(a==="logout"){sb.auth.signOut();}
+  else if(a==="payFull"){var bl=findBill(v);if(bl)act(sb.from("payments").insert({bill_id:bl.id,amount:bl.left,paid_at:today(),method:"bank"}),"Mənzil "+bl.apt+": ödənildi ✓");}
+  else if(a==="payOpen"){UI.payFor=+v;render();}
+  else if(a==="payCancel"){UI.payFor=null;render();}
+  else if(a==="paySave"){var amt=+$("pa").value;if(!(amt>0)){toast("Məbləği yazın");return;}UI.payFor=null;act(sb.from("payments").insert({bill_id:+v,amount:amt,paid_at:$("pd").value||today(),method:$("pm").value}),"Ödəniş qeyd olundu");}
+  else if(a==="clearAsk"){UI.clearFor=+v;render();}
+  else if(a==="clearNo"){UI.clearFor=null;render();}
+  else if(a==="clearYes"){UI.clearFor=null;act(sb.from("payments").delete().eq("bill_id",+v),"Ödənişlər silindi");}
+  else if(a==="monthSave"){saveMonth();}
+  else if(a==="newsAdd"){var t=$("nt").value.trim();if(!t){toast("Başlıq yazın");return;}act(sb.from("notices").insert({title:t,body:$("nb").value.trim(),push:$("np2").checked}),$("np2").checked?"Dərc edildi və bildiriş göndərildi":"Dərc edildi");}
+  else if(a==="newsDel"){UI.delN=+v;render();}
+  else if(a==="expDel"){UI.delE=+v;render();}
+  else if(a==="delNo"){UI.delN=null;UI.delE=null;render();}
+  else if(a==="newsDelYes"){UI.delN=null;act(sb.from("notices").delete().eq("id",+v),"Silindi");}
+  else if(a==="expDelYes"){UI.delE=null;act(sb.from("expenses").delete().eq("id",+v),"Silindi");}
+  else if(a==="expAdd"){var am=+$("xa").value;if(!(am>0)){toast("Məbləği yazın");return;}act(sb.from("expenses").insert({date:$("xd").value||today(),type:$("xt").value,category:$("xc").value.trim()||null,amount:am,note:$("xn").value.trim()||null}),"Əlavə edildi");}
+});
+document.addEventListener("input",function(e){
+  if(e.target.id==="q"){UI.q=e.target.value;render();}
+  if(e.target.closest&&e.target.closest("tr[data-apt]")) recalcMonth();
+});
+document.addEventListener("change",function(e){
+  if(e.target.id==="per"){UI.period=e.target.value;UI.payFor=null;render();}
+  if(e.target.id==="np"){UI.np=e.target.value;render();}
+  if(e.target.classList&&e.target.classList.contains("m-park")) recalcMonth();
+});
+boot();
+</script>
+</body>
+</html>

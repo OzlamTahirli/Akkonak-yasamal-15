@@ -20,7 +20,21 @@ const dLabel = (d) => (+d.slice(8, 10)) + " " + MON[+d.slice(5, 7) - 1];
 const money = (n) => (Math.round(n * 100) / 100).toFixed(2) + " ₼";
 const addDays = (d, n) => new Date(Date.parse(d + "T00:00:00Z") + n * 864e5).toISOString().slice(0, 10);
 
-const data = JSON.parse(fs.readFileSync("data.json", "utf8"));
+import vm from "node:vm";
+async function loadLive() {
+  const U = process.env.SUPABASE_URL, K = process.env.SUPABASE_ANON_KEY;
+  if (!U || !K) return null;
+  const get = async (t, q) => { const r = await fetch(`${U}/rest/v1/${t}?${q}`, { headers: { apikey: K, Authorization: "Bearer " + K } }); if (!r.ok) throw new Error(t + " " + r.status); return r.json(); };
+  const [settings, apartments, bills, payments, notices, expenses] = await Promise.all([
+    get("settings", "select=key,value"), get("apartments", "select=*&order=ord"), get("bills", "select=*&order=period"),
+    get("payments", "select=bill_id,amount,paid_at"), get("notices", "select=date,title,body&order=date.desc,id.desc&limit=30"), get("expenses", "select=date,type,category,amount,note")]);
+  const ctx = { window: {}, console }; vm.createContext(ctx); vm.runInContext(fs.readFileSync("data-source.js", "utf8"), ctx);
+  return ctx.window.buildData({ settings, apartments, bills, payments, notices, expenses });
+}
+let data = null;
+try { data = await loadLive(); if (data) console.log("Using live data from Supabase"); } catch (e) { console.error("Live data failed, falling back to data.json:", e.message); }
+if (!data) data = JSON.parse(fs.readFileSync("data.json", "utf8"));
+const LIVE = !!data.live;
 const building = data.ov.building || "MMMC";
 const latestPeriod = (d) => Object.values(d.bills).flat().map((b) => b.period).sort().pop() || "";
 
@@ -40,7 +54,9 @@ async function send({ title, body, url, apt }) {
   if (r.ok && !j.errors) sent++; else { failed++; console.error("OneSignal error", r.status, JSON.stringify(j)); }
 }
 
-if (mode === "push") {
+if (mode === "push" && LIVE) {
+  console.log("Live mode: announcements are pushed by the database; nothing to do.");
+} else if (mode === "push") {
   let prev = null;
   try { prev = JSON.parse(execSync("git show HEAD~1:data.json", { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] })); } catch {}
   const lp = latestPeriod(data);
