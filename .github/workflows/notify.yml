@@ -25,6 +25,6 @@ jobs:
       - name: Send notifications
         run: node scripts/notify.mjs ${{ github.event_name == 'schedule' && 'daily' || github.event.inputs.mode || 'push' }}
         env:
-          ONESIGNAL_APP_ID: ${{ vars.ONESIGNAL_APP_ID }}
+          ONESIGNAL_APP_ID: 1dfc9916-5f17-436f-9a22-66a1fdcc4652
           ONESIGNAL_REST_KEY: ${{ secrets.ONESIGNAL_REST_KEY }}
-          SITE_URL: ${{ vars.SITE_URL }}
+          SITE_URL: https://ozlamtahirli.github.io/Akkonak-yasamal-15/
