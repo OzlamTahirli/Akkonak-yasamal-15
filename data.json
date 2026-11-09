@@ -2,7 +2,7 @@
  "ov": {
   "building": "Yasamal-15 MMMC (Akkonak Residents)",
   "currency": "₼",
-  "payInfo": "",
+  "payInfo": "Ödənişi M10 tətbiqi və ya Million / E-manat terminallarından Kapital Bank cari hesabına artırma yolu ilə edin.\n\n📌 Terminalda “Hüquqi şəxs” bölməsini seçin, sonra FİN və ya şəxsiyyət vəsiqənizin seriya nömrəsini daxil edin.\n\nVÖEN / CIF: 1305136971\nAlıcı: “YASAMAL-15” MƏNZİL MMC\nIBAN: AZ02AIIB40080019440270810106",
   "period": "2026-10",
   "balance": 0,
   "billed": 9672.4,
@@ -1119,5 +1119,5 @@
   "45, 46",
   "-1"
  ],
- "generated": "2026-11-09 02:41"
+ "generated": "2026-11-09 16:05"
 }
