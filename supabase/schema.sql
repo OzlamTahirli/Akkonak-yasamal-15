@@ -93,3 +93,7 @@ end $$;
 
 drop policy if exists "admins see admins" on public.admins;
 create policy "admins see admins" on public.admins for select to authenticated using (public.is_admin());
+
+-- keep committee e-mails private: residents (anon) can read payments but not who recorded them
+revoke select on public.payments from anon;
+grant select (id, bill_id, amount, paid_at, method, created_at) on public.payments to anon;
