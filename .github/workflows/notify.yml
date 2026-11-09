@@ -28,5 +28,5 @@ jobs:
           ONESIGNAL_APP_ID: 1dfc9916-5f17-436f-9a22-66a1fdcc4652
           ONESIGNAL_REST_KEY: ${{ secrets.ONESIGNAL_REST_KEY }}
           SITE_URL: https://ozlamtahirli.github.io/Akkonak-yasamal-15/
-          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+          SUPABASE_URL: https://pkxbbcpillbttpkurtnv.supabase.co
+          SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBreGJiY3BpbGxidHRwa3VydG52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQyMzY2NTMsImV4cCI6MjEwOTgxMjY1M30.9lIlwePDY1lpXQdXui9wdCjpebjDE3VJuBv7Ek6HErw
