@@ -1,6 +1,6 @@
 {
-  "name": "Akkonak Alert — Yasamal 15 MMMC",
-  "short_name": "Akkonak Alert",
+  "name": "Akkonak",
+  "short_name": "Akkonak",
   "description": "Bina maliyyəsi, aylıq hesablar və elanlar",
   "start_url": "./",
   "scope": "./",
