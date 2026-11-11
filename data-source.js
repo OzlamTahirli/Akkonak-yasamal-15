@@ -114,12 +114,12 @@
         rest("settings", "select=key,value"),
         rest("apartments", "select=*&order=ord"),
         rest("bills", "select=*&order=period"),
-        rest("payments", "select=bill_id,amount,paid_at"),
+        rest("payments", "select=bill_id,amount,paid_at,created_at"),
         rest("notices", "select=date,title,body&order=date.desc,id.desc&limit=30"),
         rest("expenses", "select=date,type,category,amount,note"),
         rest("projects", "select=*").catch(function () { return []; }),
         rest("project_shares", "select=*").catch(function () { return []; }),
-        rest("project_payments", "select=id,share_id,amount,paid_at,method").catch(function () { return []; }),
+        rest("project_payments", "select=id,share_id,amount,paid_at,method,created_at").catch(function () { return []; }),
         rest("project_expenses", "select=*").catch(function () { return []; })
       ]).then(function (r) {
         return buildData({ settings: r[0], apartments: r[1], bills: r[2], payments: r[3], notices: r[4], expenses: r[5],
