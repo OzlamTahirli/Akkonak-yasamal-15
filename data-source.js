@@ -62,8 +62,44 @@
       apartments: order,
       updated: now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate()) + " " + pad(now.getHours()) + ":" + pad(now.getMinutes())
     };
-    return { ov: ov, bills: bills, order: order, names: names, generated: ov.updated, settings: S, live: true };
+    return { ov: ov, bills: bills, order: order, names: names, generated: ov.updated, settings: S, live: true, projects: buildProjects(raw, order) };
   }
+
+  // Projects (e.g. new elevators): per-apartment shares and installments.
+  function buildProjects(raw, order) {
+    var shares = raw.project_shares || [], pays = {}, priv = {};
+    (raw.project_payments || []).forEach(function (p) { (pays[p.share_id] = pays[p.share_id] || []).push(p); });
+    (raw.project_share_private || []).forEach(function (p) { priv[p.share_id] = p; });
+    return (raw.projects || []).slice().sort(function (a, b) { return (a.ord - b.ord) || (a.id - b.id); }).map(function (pr) {
+      var byApt = {}, groups = {}, tot = { due: 0, paid: 0, outstanding: 0, overpaid: 0, nFull: 0, nPart: 0, nNone: 0, n: 0, signed: 0 };
+      shares.filter(function (s) { return s.project_id === pr.id; }).forEach(function (s) {
+        var ps = (pays[s.id] || []).slice().sort(function (a, b) { return a.paid_at.localeCompare(b.paid_at); });
+        var paid = r2(ps.reduce(function (t, p) { return t + (+p.amount); }, 0)), due = r2(+s.share - (+s.credit || 0)), left = r2(due - paid);
+        var st = left <= 1 ? (left < -1 ? "over" : "paid") : (paid > 0 ? "partial" : "unpaid");
+        var x = { id: s.id, apt: s.apt, grp: s.grp || "", share: +s.share, credit: +s.credit || 0, creditNote: s.credit_note || "", signed: !!s.signed,
+          due: due, paid: paid, left: left, status: st, payments: ps, lastPaid: ps.length ? ps[ps.length - 1].paid_at : "",
+          protocol: priv[s.id] ? priv[s.id].protocol_amount : null, note: priv[s.id] ? priv[s.id].note : null };
+        byApt[s.apt] = x;
+        var g = groups[x.grp] = groups[x.grp] || { name: x.grp, n: 0, share: x.share, due: 0, paid: 0 };
+        g.n++; g.due += due; g.paid += Math.min(paid, due);
+        tot.n++; tot.due += due; tot.paid += paid; if (left > 1) tot.outstanding += left; if (left < -1) tot.overpaid -= left;
+        if (st === "paid" || st === "over") tot.nFull++; else if (st === "partial") tot.nPart++; else tot.nNone++;
+        if (x.signed) tot.signed++;
+      });
+      var ex = (raw.project_expenses || []).filter(function (e) { return e.project_id === pr.id; }).map(function (e) { return { id: e.id, date: e.date, amount: +e.amount, note: e.note || "" }; })
+        .sort(function (a, b) { return b.date.localeCompare(a.date); });
+      var spent = r2(ex.reduce(function (t, e) { return t + e.amount; }, 0));
+      Object.keys(tot).forEach(function (k) { tot[k] = r2(tot[k]); });
+      tot.collected = r2(tot.due - tot.outstanding); // counted towards shares (overpayments excluded)
+      tot.pct = tot.due ? Math.min(100, Math.round(tot.collected / tot.due * 1000) / 10) : 0;
+      return { id: pr.id, title: pr.title, description: pr.description || "", totalCost: pr.total_cost == null ? null : +pr.total_cost, costNote: pr.cost_note || "",
+        status: pr.status, start: pr.start_date || "", deadline: pr.deadline || "", shares: byApt,
+        order: order.filter(function (a) { return byApt[a]; }), others: order.filter(function (a) { return !byApt[a]; }),
+        groups: Object.keys(groups).sort().map(function (k) { var g = groups[k]; g.due = r2(g.due); g.paid = r2(g.paid); return g; }),
+        totals: tot, expenses: ex, spent: spent, cash: r2(tot.paid - spent) };
+    });
+  }
+  window.buildProjects = buildProjects;
 
   function rest(table, query) {
     return fetch(window.SUPABASE_URL + "/rest/v1/" + table + "?" + query, {
@@ -80,9 +116,14 @@
         rest("bills", "select=*&order=period"),
         rest("payments", "select=bill_id,amount,paid_at"),
         rest("notices", "select=date,title,body&order=date.desc,id.desc&limit=30"),
-        rest("expenses", "select=date,type,category,amount,note")
+        rest("expenses", "select=date,type,category,amount,note"),
+        rest("projects", "select=*").catch(function () { return []; }),
+        rest("project_shares", "select=*").catch(function () { return []; }),
+        rest("project_payments", "select=id,share_id,amount,paid_at,method").catch(function () { return []; }),
+        rest("project_expenses", "select=*").catch(function () { return []; })
       ]).then(function (r) {
-        return buildData({ settings: r[0], apartments: r[1], bills: r[2], payments: r[3], notices: r[4], expenses: r[5] });
+        return buildData({ settings: r[0], apartments: r[1], bills: r[2], payments: r[3], notices: r[4], expenses: r[5],
+          projects: r[6], project_shares: r[7], project_payments: r[8], project_expenses: r[9] });
       }).catch(function (e) {
         console.warn("Live data unavailable, using saved copy:", e);
         return fetch("data.json?v=" + Date.now(), { cache: "no-store" }).then(function (r) { return r.json(); });

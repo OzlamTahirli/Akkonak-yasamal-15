@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js?v=1794247376"></script>
-<script src="data-source.js?v=admin1"></script>
+<script src="data-source.js?v=2"></script>
 <style>
 :root{color-scheme:light;--bg:#f4f3ef;--surface:#fcfcfb;--surface-2:#f0efec;--line:#e2e0da;--text:#0b0b0b;--text-2:#52514e;--muted:#85837d;
  --accent:#1c5cab;--accent-soft:#e3eefb;--on-accent:#fff;--good:#0ca30c;--good-soft:#e4f4e4;--warning:#fab219;--warn-soft:#fdf2d9;--critical:#d03b3b;--crit-soft:#fbe6e6}
@@ -55,6 +55,9 @@ td{padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
 .center{max-width:420px;margin:60px auto}
 .tbl-in{width:96px;padding:5px 7px}
 .err{color:var(--critical);font-weight:700}
+.meter{height:6px;border-radius:99px;background:var(--surface-2);margin-top:6px;overflow:hidden}.meter i{display:block;height:100%;background:var(--accent)}
+.st-over{background:var(--good-soft)}
+details summary{cursor:pointer;font-weight:800}
 </style>
 </head>
 <body>
@@ -72,8 +75,8 @@ function pL(p){return p?MON[+p.slice(5,7)-1]+" "+p.slice(0,4):"";}
 function money(n){return(Math.round((+n||0)*100)/100).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})+" ₼";}
 function r1(n){return Math.round((+n||0)*10+1e-9)/10;}
 function toast(m){var t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove();},2600);}
-var STL={paid:"Ödənilib",partial:"Qismən",unpaid:"Ödənilməyib",overdue:"Gecikib"};
-function pill(s){return '<span class="status st-'+s+'">'+({paid:"✓",partial:"◐",unpaid:"○",overdue:"!"}[s])+' '+STL[s]+'</span>';}
+var STL={paid:"Ödənilib",partial:"Qismən",unpaid:"Ödənilməyib",overdue:"Gecikib",over:"Artıq ödənilib"};
+function pill(s){return '<span class="status st-'+s+'">'+({paid:"✓",over:"✓",partial:"◐",unpaid:"○",overdue:"!"}[s])+' '+STL[s]+'</span>';}
 var $=function(id){return document.getElementById(id);};
 
 /* ---------------- auth ---------------- */
@@ -106,9 +109,11 @@ function q(t,sel,mod){var x=sb.from(t).select(sel||"*");return mod?mod(x):x;}
 function load(){
   return Promise.all([q("settings","key,value"),q("apartments","*",function(x){return x.order("ord");}),q("bills","*",function(x){return x.order("period");}),
     q("payments","id,bill_id,amount,paid_at,method,created_by"),q("notices","*",function(x){return x.order("date",{ascending:false}).order("id",{ascending:false});}),
-    q("expenses","*",function(x){return x.order("date",{ascending:false}).order("id",{ascending:false});})]).then(function(r){
+    q("expenses","*",function(x){return x.order("date",{ascending:false}).order("id",{ascending:false});}),
+    q("projects","*"),q("project_shares","*"),q("project_share_private","*"),q("project_payments","id,share_id,amount,paid_at,method,created_by"),q("project_expenses","*")]).then(function(r){
     var bad=r.filter(function(x){return x.error;}); if(bad.length){toast("Yükləmə xətası: "+bad[0].error.message);return;}
-    RAW={settings:r[0].data,apartments:r[1].data,bills:r[2].data,payments:r[3].data,notices:r[4].data,expenses:r[5].data};
+    RAW={settings:r[0].data,apartments:r[1].data,bills:r[2].data,payments:r[3].data,notices:r[4].data,expenses:r[5].data,
+      projects:r[6].data,project_shares:r[7].data,project_share_private:r[8].data,project_payments:r[9].data,project_expenses:r[10].data};
     D=buildData(RAW);
     var ps=periods(); if(!UI.period||ps.indexOf(UI.period)<0) UI.period=ps[0]||null;
     render();
@@ -121,14 +126,14 @@ function act(promise,okMsg){UI.busy=true;render();return promise.then(function(r
 /* ---------------- views ---------------- */
 function render(){
   if(!D) return;
-  var tabs=[["pay","💳 Ödənişlər"],["month","🧾 Yeni ay / sayğac"],["news","📣 Elanlar"],["exp","📊 Xərclər"]];
+  var tabs=[["pay","💳 Ödənişlər"],["month","🧾 Yeni ay / sayğac"],["proj","🏗 Layihələr"],["news","📣 Elanlar"],["exp","📊 Xərclər"]];
   var h='<header><div class="logo">YM</div><div><h1>İdarə paneli</h1><div class="sub">'+esc(D.ov.building)+'</div></div><div class="spacer"></div>'+
     '<span class="small muted">'+esc(ME.email)+'</span><a class="btn sm" href="./" target="_blank">Sayt ↗</a><button class="btn sm" data-a="logout">Çıxış</button></header>'+
     '<nav>'+tabs.map(function(t){return '<button data-a="tab" data-v="'+t[0]+'" class="'+(UI.tab===t[0]?"on":"")+'">'+t[1]+'</button>';}).join("")+'</nav>';
-  h+=({pay:vPay,month:vMonth,news:vNews,exp:vExp})[UI.tab]();
+  h+=({pay:vPay,month:vMonth,proj:vProj,news:vNews,exp:vExp})[UI.tab]();
   var a=document.activeElement, keep=a&&a.id?{id:a.id,v:a.value,s:a.selectionStart}:null;
   $("app").innerHTML=h;
-  if(keep&&$(keep.id)&&keep.id==="q"){var el=$(keep.id);el.focus();try{el.setSelectionRange(keep.s,keep.s);}catch(e){}}
+  if(keep&&$(keep.id)&&(keep.id==="q"||keep.id==="pq")){var el=$(keep.id);el.focus();try{el.setSelectionRange(keep.s,keep.s);}catch(e){}}
 }
 function vPay(){
   var ps=periods(); if(!ps.length) return '<div class="card">Hələ hesab yoxdur. "Yeni ay" bölməsindən yaradın.</div>';
@@ -224,11 +229,72 @@ function vExp(){
   h+='<div class="card scroll"><h2>Son əməliyyatlar</h2>'+(ex.length?'<table><thead><tr><th>Tarix</th><th>Kateqoriya</th><th>Qeyd</th><th class="num">Məbləğ</th><th></th></tr></thead><tbody>'+ex.slice(0,60).map(function(x){return '<tr><td>'+esc(x.date)+'</td><td>'+esc(x.category||"")+'</td><td class="small">'+esc(x.note||"")+'</td><td class="num">'+(x.type==="income"?"+":"−")+money(x.amount)+'</td><td class="num">'+(UI.delE===x.id?'<button class="btn sm danger" data-a="expDelYes" data-v="'+x.id+'">Sil?</button> <button class="btn sm" data-a="delNo">Xeyr</button>':'<button class="btn sm danger" data-a="expDel" data-v="'+x.id+'">✕</button>')+'</td></tr>';}).join("")+'</tbody></table>':'<p class="muted">Hələ yoxdur.</p>')+'</div>';
   return h;
 }
+/* ---------------- projects ---------------- */
+function PRJ(){return D.projects||[];}
+function curProj(){var ps=PRJ();if(!ps.length)return null;var p=ps.filter(function(x){return x.id===UI.proj;})[0];if(!p){p=ps[0];UI.proj=p.id;}return p;}
+function projForm(p){p=p||{};
+  return '<div class="row"><div class="field" style="flex:1;min-width:200px"><label for="pjt">Ad</label><input id="pjt" value="'+esc(p.title||"")+'" placeholder="məs. Yeni liftlər"></div>'+
+   '<div class="field"><label for="pjc">Ümumi dəyər (₼)</label><input id="pjc" type="number" step="0.01" value="'+(p.totalCost!=null?p.totalCost:"")+'" style="width:130px"></div>'+
+   '<div class="field"><label for="pjn">Dəyər qeydi</label><input id="pjn" value="'+esc(p.costNote||"")+'" placeholder="$70,000" style="width:150px"></div>'+
+   '<div class="field"><label for="pjs">Status</label><select id="pjs">'+[["planned","Planlaşdırılır"],["active","Davam edir"],["done","Bitib"]].map(function(o){return '<option value="'+o[0]+'"'+((p.status||"active")===o[0]?" selected":"")+'>'+o[1]+'</option>';}).join("")+'</select></div>'+
+   '<div class="field"><label for="pjd">Başlanğıc</label><input id="pjd" type="date" value="'+esc(p.start||"")+'"></div></div>'+
+   '<div class="field" style="margin-top:8px"><label for="pjx">Təsvir (sakinlər görür)</label><textarea id="pjx">'+esc(p.description||"")+'</textarea></div>';
+}
+function projVals(){var c=$("pjc").value;return {title:$("pjt").value.trim(),total_cost:c===""?null:+c,cost_note:$("pjn").value.trim()||null,status:$("pjs").value,start_date:$("pjd").value||null,description:$("pjx").value.trim()||null};}
+function vProj(){
+  var ps=PRJ();
+  if(UI.newProj||!ps.length) return '<div class="card"><h2>Yeni layihə</h2>'+projForm()+'<div class="row" style="margin-top:10px"><div class="spacer"></div>'+(ps.length?'<button class="btn" data-a="pjCancel">Ləğv</button>':'')+'<button class="btn primary" data-a="pjCreate" '+(UI.busy?"disabled":"")+'>Yarat</button></div><p class="hint" style="margin-top:8px">Yaratdıqdan sonra mənzilləri və paylarını əlavə edəcəksiniz.</p></div>';
+  var p=curProj(), T=p.totals, ql=(UI.pq||"").toLowerCase();
+  var h='<div class="row" style="margin-bottom:12px"><div class="field"><label for="pjsel">Layihə</label><select id="pjsel">'+ps.map(function(x){return '<option value="'+x.id+'"'+(x.id===p.id?" selected":"")+'>'+esc(x.title)+'</option>';}).join("")+'</select></div>'+
+    '<div class="field" style="flex:1;min-width:160px"><label for="pq">Axtar (mənzil və ya ad)</label><input id="pq" value="'+esc(UI.pq||"")+'"></div><button class="btn" data-a="pjNew">＋ Yeni layihə</button></div>';
+  h+='<div class="kpis"><div class="kpi"><span>Ödənilməli (paylar)</span><b>'+money(T.due)+'</b></div><div class="kpi"><span>Yığılıb · '+T.pct+'%</span><b>'+money(T.collected)+'</b><div class="meter"><i style="width:'+T.pct+'%"></i></div></div><div class="kpi"><span>Qalıq borc</span><b>'+money(T.outstanding)+'</b></div><div class="kpi"><span>Tam ödəyən</span><b>'+T.nFull+' / '+T.n+'</b></div></div>';
+  h+='<div class="card scroll"><table><thead><tr><th>Mənzil</th><th>Qrup</th><th class="num">Ödənilməli</th><th class="num">Ödənilib</th><th class="num">Qalıq</th><th>Status</th><th></th></tr></thead><tbody>';
+  p.order.forEach(function(a){var x=p.shares[a]; if(ql&&a.toLowerCase().indexOf(ql)!==0&&(D.names[a]||"").toLowerCase().indexOf(ql)<0) return;
+    h+='<tr><td><b>'+esc(a)+'</b><div class="small muted">'+esc(D.names[a]||"")+'</div></td><td class="small">'+esc(x.grp)+(x.signed?'<div class="muted">✓ protokol</div>':'')+'</td><td class="num">'+money(x.due)+(x.credit?'<div class="small muted">'+money(x.share)+' − '+money(x.credit)+'</div>':'')+'</td>'+
+      '<td class="num">'+money(x.paid)+(x.payments.length?'<div class="small"><button class="linklike btn sm" style="border:0;padding:0;background:none;color:var(--accent)" data-a="ppList" data-v="'+x.id+'">'+x.payments.length+' ödəniş '+(UI.ppList===x.id?"▴":"▾")+'</button></div>':'')+'</td>'+
+      '<td class="num"><b>'+(x.left>1?money(x.left):"—")+'</b>'+(x.left<-1?'<div class="small" style="color:var(--good)">+'+money(-x.left)+'</div>':'')+'</td><td>'+pill(x.status)+'</td>'+
+      '<td class="num">'+(x.left>1?'<button class="btn sm good" data-a="ppOpen" data-v="'+x.id+'">＋ Ödəniş</button> ':'')+'<button class="btn sm" data-a="shEdit" data-v="'+x.id+'" title="Payı redaktə et">✎</button></td></tr>';
+    if(UI.ppFor===x.id) h+='<tr><td colspan="7"><div class="inline row"><div class="field"><label for="ppa">Məbləğ</label><input id="ppa" type="number" step="0.01" min="0" value="'+Math.max(0,x.left)+'" class="tbl-in"></div>'+
+      '<div class="field"><label for="ppd">Tarix</label><input id="ppd" type="date" value="'+today()+'"></div><div class="field"><label for="ppm">Üsul</label><select id="ppm"><option value="bank">Bank</option><option value="cash">Nağd</option><option value="card">Kart</option></select></div>'+
+      '<button class="btn primary" data-a="ppSave" data-v="'+x.id+'" '+(UI.busy?"disabled":"")+'>Yadda saxla</button><button class="btn" data-a="ppCancel">Ləğv</button><span class="small muted">Sakinə bildiriş gedəcək</span></div></td></tr>';
+    if(UI.ppList===x.id) h+='<tr><td colspan="7"><div class="inline"><table><tbody>'+x.payments.map(function(y){return '<tr><td>'+esc(y.paid_at)+'</td><td class="small muted">'+esc(y.method||"")+'</td><td class="num">'+money(y.amount)+'</td><td class="num">'+(UI.ppDel===y.id?'<button class="btn sm danger" data-a="ppDelYes" data-v="'+y.id+'">Sil?</button> <button class="btn sm" data-a="ppDelNo">Xeyr</button>':'<button class="btn sm danger" data-a="ppDel" data-v="'+y.id+'">✕</button>')+'</td></tr>';}).join("")+'</tbody></table></div></td></tr>';
+    if(UI.shEdit===x.id) h+='<tr><td colspan="7">'+shareForm(x)+'</td></tr>';
+  });
+  h+='</tbody></table></div>';
+  if(p.others.length) h+='<div class="card"><h2>Layihədə olmayan mənzillər</h2><p class="hint">Mənzili layihəyə əlavə etmək üçün seçin.</p><div class="row">'+p.others.map(function(a){return '<button class="btn sm" data-a="shAdd" data-v="'+esc(a)+'">＋ '+esc(a)+(D.names[a]?' · '+esc(D.names[a]):'')+'</button>';}).join("")+'</div>'+
+    (UI.shAdd?'<div style="margin-top:10px">'+shareForm({apt:UI.shAdd,grp:(p.groups[0]||{}).name||"",share:(p.groups[0]||{}).share||0,credit:0,signed:false})+'</div>':'')+
+    (p.order.length?'':'<div class="inline row" style="margin-top:10px"><div class="field"><label for="bulk">Bütün mənzillərə eyni pay (₼)</label><input id="bulk" type="number" step="0.01" class="tbl-in"></div><button class="btn primary" data-a="shBulk">Hamısını əlavə et</button></div>')+'</div>';
+  h+='<div class="card"><h2>Layihə xərcləri</h2><p class="hint">Podratçıya və ya layihəyə edilən ödənişlər. Sakinlər "Layihələr" bölməsində görür.</p><div class="row"><div class="field"><label for="pxd">Tarix</label><input id="pxd" type="date" value="'+today()+'"></div><div class="field"><label for="pxa">Məbləğ</label><input id="pxa" type="number" step="0.01" min="0" style="width:120px"></div><div class="field" style="flex:1;min-width:160px"><label for="pxn">Qeyd</label><input id="pxn" placeholder="məs. Avans — lift şirkəti"></div><button class="btn primary" data-a="pxAdd" '+(UI.busy?"disabled":"")+'>Əlavə et</button></div>'+
+    (p.expenses.length?'<table style="margin-top:10px"><tbody>'+p.expenses.map(function(e){return '<tr><td>'+esc(e.date)+'</td><td class="small">'+esc(e.note)+'</td><td class="num">−'+money(e.amount)+'</td><td class="num">'+(UI.pxDel===e.id?'<button class="btn sm danger" data-a="pxDelYes" data-v="'+e.id+'">Sil?</button> <button class="btn sm" data-a="pxDelNo">Xeyr</button>':'<button class="btn sm danger" data-a="pxDel" data-v="'+e.id+'">✕</button>')+'</td></tr>';}).join("")+
+      '<tr><td colspan="2"><b>Yığılıb − xərclənib</b></td><td class="num"><b>'+money(p.cash)+'</b></td><td></td></tr></tbody></table>':'')+'</div>';
+  h+='<details class="card"><summary>Layihə məlumatları (ad, təsvir, dəyər)</summary><div style="margin-top:10px">'+projForm(p)+'<div class="row" style="margin-top:10px"><div class="spacer"></div><button class="btn primary" data-a="pjSave" '+(UI.busy?"disabled":"")+'>Yadda saxla</button></div></div></details>';
+  return h;
+}
+function shareForm(x){
+  var ex=x.id!=null;
+  return '<div class="inline"><div class="row"><b style="padding-bottom:8px">Mənzil '+esc(x.apt)+'</b><div class="field"><label for="sg">Qrup</label><input id="sg" value="'+esc(x.grp||"")+'" style="width:150px"></div>'+
+    '<div class="field"><label for="ss">Pay (₼)</label><input id="ss" type="number" step="0.01" value="'+x.share+'" class="tbl-in"></div><div class="field"><label for="sc">Çıxılır (₼)</label><input id="sc" type="number" step="0.01" value="'+(x.credit||0)+'" class="tbl-in"></div>'+
+    '<div class="field"><label for="scn">Çıxılma səbəbi</label><input id="scn" value="'+esc(x.creditNote||(x.credit?"":""))+'" placeholder="Liftin inventoru" style="width:140px"></div>'+
+    '<label class="small" style="padding-bottom:9px"><input type="checkbox" id="ssg" '+(x.signed?"checked":"")+' style="padding:0"> Protokol imzalanıb</label></div>'+
+    '<div class="row" style="margin-top:8px"><div class="field"><label for="spa">Protokol məbləği (yalnız komitə)</label><input id="spa" type="number" step="0.01" value="'+(x.protocol!=null?x.protocol:"")+'" class="tbl-in"></div><div class="field" style="flex:1;min-width:160px"><label for="spn">Daxili qeyd (yalnız komitə)</label><input id="spn" value="'+esc(x.note||"")+'"></div>'+
+    '<div class="spacer"></div>'+(ex?(UI.shDel===x.id?'<button class="btn danger" data-a="shDelYes" data-v="'+x.id+'">Ödənişlərlə birlikdə silinsin?</button>':'<button class="btn danger" data-a="shDel" data-v="'+x.id+'">Layihədən çıxar</button>'):'')+
+    '<button class="btn" data-a="shCancel">Ləğv</button><button class="btn primary" data-a="shSave" data-v="'+(ex?x.id:"")+'" data-apt="'+esc(x.apt)+'" '+(UI.busy?"disabled":"")+'>Yadda saxla</button></div></div>';
+}
+function saveShare(id,apt){
+  var p=curProj(), row={grp:$("sg").value.trim()||null,share:+$("ss").value||0,credit:+$("sc").value||0,credit_note:$("scn").value.trim()||null,signed:$("ssg").checked};
+  var pa=$("spa").value, pn=$("spn").value.trim(), priv={protocol_amount:pa===""?null:+pa,note:pn||null};
+  var chain=(id?sb.from("project_shares").update(row).eq("id",+id).select("id"):sb.from("project_shares").insert(Object.assign({project_id:p.id,apt:apt},row)).select("id")).then(function(r){
+    if(r.error) return r; var sid=r.data[0].id;
+    return sb.from("project_share_private").upsert(Object.assign({share_id:sid},priv),{onConflict:"share_id"});
+  });
+  UI.shEdit=null;UI.shAdd=null;act(chain,"Yadda saxlanıldı");
+}
 function findBill(id){id=+id;var r=null;Object.keys(D.bills).forEach(function(a){D.bills[a].forEach(function(b){if(b.id===id)r=b;});});return r;}
 
 /* ---------------- events ---------------- */
 document.addEventListener("click",function(e){
   var b=e.target.closest("[data-a]"); if(!b||!D) return; var a=b.getAttribute("data-a"), v=b.getAttribute("data-v");
+  if(a.indexOf("pp")===0||a.indexOf("sh")===0||a.indexOf("pj")===0||a.indexOf("px")===0){projClick(a,v,b);return;}
   if(a==="tab"){UI.tab=v;UI.payFor=null;render();}
   else if(a==="logout"){sb.auth.signOut();}
   else if(a==="payFull"){var bl=findBill(v);if(bl)act(sb.from("payments").insert({bill_id:bl.id,amount:bl.left,paid_at:today(),method:"bank"}),"Mənzil "+bl.apt+": ödənildi ✓");}
@@ -247,11 +313,41 @@ document.addEventListener("click",function(e){
   else if(a==="expDelYes"){UI.delE=null;act(sb.from("expenses").delete().eq("id",+v),"Silindi");}
   else if(a==="expAdd"){var am=+$("xa").value;if(!(am>0)){toast("Məbləği yazın");return;}act(sb.from("expenses").insert({date:$("xd").value||today(),type:$("xt").value,category:$("xc").value.trim()||null,amount:am,note:$("xn").value.trim()||null}),"Əlavə edildi");}
 });
+function projClick(a,v,b){
+  var p=curProj();
+  if(a==="pjNew"){UI.newProj=true;render();}
+  else if(a==="pjCancel"){UI.newProj=false;render();}
+  else if(a==="pjCreate"){var pv=projVals();if(!pv.title){toast("Ad yazın");return;}
+    act(sb.from("projects").insert(pv).select("id").then(function(r){if(!r.error){UI.proj=r.data[0].id;UI.newProj=false;}return r;}),"Layihə yaradıldı");}
+  else if(a==="pjSave"){var pv2=projVals();if(!pv2.title){toast("Ad yazın");return;}act(sb.from("projects").update(pv2).eq("id",p.id),"Yadda saxlanıldı");}
+  else if(a==="ppOpen"){UI.ppFor=+v;UI.shEdit=null;render();}
+  else if(a==="ppCancel"){UI.ppFor=null;render();}
+  else if(a==="ppSave"){var amt=+$("ppa").value;if(!(amt>0)){toast("Məbləği yazın");return;}UI.ppFor=null;
+    act(sb.from("project_payments").insert({share_id:+v,amount:amt,paid_at:$("ppd").value||today(),method:$("ppm").value}),"Ödəniş qeyd olundu, sakinə bildiriş göndərildi");}
+  else if(a==="ppList"){UI.ppList=UI.ppList===+v?null:+v;render();}
+  else if(a==="ppDel"){UI.ppDel=+v;render();}
+  else if(a==="ppDelNo"){UI.ppDel=null;render();}
+  else if(a==="ppDelYes"){UI.ppDel=null;act(sb.from("project_payments").delete().eq("id",+v),"Ödəniş silindi");}
+  else if(a==="shEdit"){UI.shEdit=UI.shEdit===+v?null:+v;UI.ppFor=null;UI.shDel=null;render();}
+  else if(a==="shAdd"){UI.shAdd=v;render();}
+  else if(a==="shCancel"){UI.shEdit=null;UI.shAdd=null;UI.shDel=null;render();}
+  else if(a==="shSave"){saveShare(v,b.getAttribute("data-apt"));}
+  else if(a==="shDel"){UI.shDel=+v;render();}
+  else if(a==="shDelYes"){UI.shDel=null;UI.shEdit=null;act(sb.from("project_shares").delete().eq("id",+v),"Mənzil layihədən çıxarıldı");}
+  else if(a==="shBulk"){var am=+$("bulk").value;if(!(am>0)){toast("Məbləği yazın");return;}
+    act(sb.from("project_shares").insert(p.others.map(function(x){return {project_id:p.id,apt:x,share:am};})),"Mənzillər əlavə edildi");}
+  else if(a==="pxAdd"){var xa=+$("pxa").value;if(!(xa>0)){toast("Məbləği yazın");return;}act(sb.from("project_expenses").insert({project_id:p.id,date:$("pxd").value||today(),amount:xa,note:$("pxn").value.trim()||null}),"Əlavə edildi");}
+  else if(a==="pxDel"){UI.pxDel=+v;render();}
+  else if(a==="pxDelNo"){UI.pxDel=null;render();}
+  else if(a==="pxDelYes"){UI.pxDel=null;act(sb.from("project_expenses").delete().eq("id",+v),"Silindi");}
+}
 document.addEventListener("input",function(e){
   if(e.target.id==="q"){UI.q=e.target.value;render();}
+  if(e.target.id==="pq"){UI.pq=e.target.value;render();}
   if(e.target.closest&&e.target.closest("tr[data-apt]")) recalcMonth();
 });
 document.addEventListener("change",function(e){
+  if(e.target.id==="pjsel"){UI.proj=+e.target.value;UI.ppFor=null;UI.shEdit=null;render();}
   if(e.target.id==="per"){UI.period=e.target.value;UI.payFor=null;render();}
   if(e.target.id==="np"){UI.np=e.target.value;render();}
   if(e.target.classList&&e.target.classList.contains("m-park")) recalcMonth();

@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Akkonak">
 <script src="config.js?v=1794247370"></script>
-<script src="data-source.js?v=1"></script>
+<script src="data-source.js?v=2"></script>
 <script>
 window.OneSignalDeferred = window.OneSignalDeferred || [];
 if (window.ONESIGNAL_APP_ID) {
@@ -96,6 +96,9 @@ input:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
 .push .ic{font-size:22px}.push .tx{flex:1;min-width:200px}.push .tx b{display:block}
 .linklike{background:none;border:0;color:var(--accent);font-weight:700;cursor:pointer;padding:0;font-size:13.5px}
 ol.ios{margin:6px 0 0;padding-left:20px;font-size:13.5px;color:var(--text-2)}
+.st-over{background:var(--good-soft)}.st-over .ico{background:var(--good)}
+.pcard{cursor:pointer}.pcard:hover{border-color:var(--accent)}
+.desc{color:var(--text-2);font-size:13.5px;margin:4px 0 0;max-width:760px}
 .foot-note{margin-top:22px;text-align:center;color:var(--muted);font-size:12px}
 </style>
 </head>
@@ -124,7 +127,7 @@ var T={
   youOwe:"Ödənilməli məbləğ",allPaid:"Bütün hesablar ödənilib. Təşəkkür edirik!",dueBy:"Son tarix: {d}",howToPay:"Necə ödəmək olar",latest:"Son hesab",
   history:"Hesab tarixçəsi",period:"Dövr",kommunal:"Kommunal",elec:"Elektrik",parking:"Parkinq",extra:"Əlavə",total:"Cəmi",paid:"Ödənilib",left:"Qalıq",due:"Son tarix",status:"Status",
   meter:"Sayğac",kwh:"kVt·s",noBills:"Hələ hesab yoxdur.",st_paid:"Ödənilib",st_partial:"Qismən",st_unpaid:"Ödənilməyib",st_overdue:"Gecikib",
-  bannerOverdue:"Gecikmiş borcunuz var: <b>{a}</b>.",noNotices:"Elan yoxdur.",updated:"Yenilənib: {d}",readingPending:"Sayğac göstəricisi hələ daxil edilməyib"},
+  bannerOverdue:"Gecikmiş borcunuz var: <b>{a}</b>.",noNotices:"Elan yoxdur.",updated:"Yenilənib: {d}",readingPending:"Sayğac göstəricisi hələ daxil edilməyib",komNote:"su, istilik, zibil, təmizlik",projects:"Layihələr",projTotal:"Ümumi dəyər",projCollected:"Yığılıb",projOf:"{b} payın {p}%-i",projLeft:"Qalıq borc",projLeftFoot:"{n} mənzil hələ tam ödəməyib",projFull:"Tam ödəyən",projFullFoot:"{p} qismən · {u} ödəməyib",grp:"Qrup",perApt:"Mənzil payı",share:"Pay",credit:"Çıxılır",dueAmt:"Ödənilməli",projPaid:"Ödənilib",projStatus:"Status",st_over:"Artıq ödənilib",groupsT:"Bölgü",apts:"mənzil",spentT:"Layihə xərcləri",spent:"Xərclənib",cash:"Layihə kassasında",noSpent:"Hələ layihə xərci qeyd olunmayıb.",notIn:"Layihədə iştirak etmir: {a}",yourShare:"Sizin payınız",installments:"Ödənişlər",noInst:"Hələ ödəniş yoxdur.",notInYou:"Mənzil {a} bu layihədə iştirak etmir.",filterAll:"Hamısı",filterDebt:"Borcu olanlar",signed:"Protokol imzalanıb",more:"Ətraflı",overBy:"{a} artıq ödənilib",startD:"Başlanğıc",allApts:"Bütün mənzillər",projReport:"Layihə hesabatı",periodsG:"Aylıq hesablar"},
  en:{app:"Building finances & monthly bills",overview:"Overview",mybill:"My bill",notices:"Announcements",loading:"Loading…",loadErr:"Couldn't load the data. Please refresh the page.",
   balance:"Fund balance",balanceFoot:"all income − all expenses",collectedFor:"Collected · {p} bills",ofBilled:"of {b} billed · {n}/{m} apartments paid",
   expMonth:"Expenses this month",debt:"Total outstanding",debtFoot:"{n} apartments overdue",incExp:"Income vs expenses",last6:"Last 6 months",income:"Income",expense:"Expenses",
@@ -139,7 +142,7 @@ var T={
   youOwe:"Amount due",allPaid:"All bills are paid. Thank you!",dueBy:"Due by {d}",howToPay:"How to pay",latest:"Latest bill",
   history:"Bill history",period:"Period",kommunal:"Kommunal",elec:"Electricity",parking:"Parking",extra:"Extra",total:"Total",paid:"Paid",left:"Remaining",due:"Due",status:"Status",
   meter:"Meter",kwh:"kWh",noBills:"No bills yet.",st_paid:"Paid",st_partial:"Partial",st_unpaid:"Unpaid",st_overdue:"Overdue",
-  bannerOverdue:"You have an overdue balance: <b>{a}</b>.",noNotices:"No announcements.",updated:"Updated: {d}",readingPending:"Meter reading not entered yet"}
+  bannerOverdue:"You have an overdue balance: <b>{a}</b>.",noNotices:"No announcements.",updated:"Updated: {d}",readingPending:"Meter reading not entered yet",komNote:"water, heating, rubbish, cleaning",projects:"Projects",projTotal:"Total cost",projCollected:"Collected",projOf:"{p}% of {b} in shares",projLeft:"Still owed",projLeftFoot:"{n} apartments haven't paid in full",projFull:"Paid in full",projFullFoot:"{p} partial · {u} not paid",grp:"Group",perApt:"Per apartment",share:"Share",credit:"Deducted",dueAmt:"To pay",projPaid:"Paid",projStatus:"Status",st_over:"Overpaid",groupsT:"Split",apts:"apartments",spentT:"Project spending",spent:"Spent",cash:"Left in project fund",noSpent:"No project spending recorded yet.",notIn:"Not taking part: {a}",yourShare:"Your share",installments:"Payments",noInst:"No payments yet.",notInYou:"Apartment {a} isn't part of this project.",filterAll:"All",filterDebt:"Still owing",signed:"Protocol signed",more:"Details",overBy:"{a} overpaid",startD:"Started",allApts:"All apartments",projReport:"Project report",periodsG:"Monthly bills"}
 };
 var MON={az:["Yanvar","Fevral","Mart","Aprel","May","İyun","İyul","Avqust","Sentyabr","Oktyabr","Noyabr","Dekabr"],en:["January","February","March","April","May","June","July","August","September","October","November","December"]};
 var MS={az:["Yan","Fev","Mar","Apr","May","İyn","İyl","Avq","Sen","Okt","Noy","Dek"],en:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]};
@@ -153,7 +156,7 @@ function money(n){var v=Math.round((+n||0)*100)/100;return v.toLocaleString("en-
 function pL(p){if(!p)return"";var a=p.split("-");return MON[S.lang][+a[1]-1]+" "+a[0];}
 function pS(p){return MS[S.lang][+p.split("-")[1]-1];}
 function dL(d){if(!d)return"—";var a=d.split("-");if(a.length<3)return esc(d);return (+a[2])+" "+MS[S.lang][+a[1]-1]+" "+a[0];}
-function pill(st){var ico={paid:"✓",partial:"◐",unpaid:"○",overdue:"!"}[st]||"○";return '<span class="status st-'+st+'"><span class="ico">'+ico+'</span>'+t("st_"+st)+'</span>';}
+function pill(st){var ico={paid:"✓",over:"✓",partial:"◐",unpaid:"○",overdue:"!"}[st]||"○";return '<span class="status st-'+st+'"><span class="ico">'+ico+'</span>'+t("st_"+st)+'</span>';}
 
 
 function fixStatus(x){var td=today();x.status=x.left<=0.005?"paid":(x.due&&x.due<td?"overdue":(x.paid>0?"partial":"unpaid"));return x;}
@@ -170,12 +173,12 @@ function render(){
   var ini=name.split(/\s+/).filter(Boolean).slice(0,2).map(function(w){return w[0];}).join("").toUpperCase()||"M";
   document.getElementById("hdr").innerHTML='<div class="logo">'+esc(ini)+'</div><div><h1>'+esc(name)+'</h1><div class="sub">'+t("app")+'</div></div><div class="spacer"></div>'+
    '<div class="seg"><button data-a="lang" data-v="az" class="'+(S.lang=="az"?"on":"")+'">AZ</button><button data-a="lang" data-v="en" class="'+(S.lang=="en"?"on":"")+'">EN</button></div>';
-  var tabs=[["overview",t("overview")],["bill",t("mybill")],["report",t("report")],["notices",t("notices")]];
+  var tabs=[["overview",t("overview")],["bill",t("mybill")],["report",t("report")]].concat(PR().length?[["projects",t("projects")]]:[]).concat([["notices",t("notices")]]);
   document.getElementById("nav").innerHTML=tabs.map(function(x){return '<button data-a="tab" data-v="'+x[0]+'" class="'+(S.tab==x[0]?"on":"")+'">'+x[1]+'</button>';}).join("");
   var m=document.getElementById("main");
   if(S.ovErr) m.innerHTML='<div class="card empty">'+t("loadErr")+'</div>';
   else if(!S.ov) m.innerHTML='<div class="card empty">'+t("loading")+'</div>';
-  else m.innerHTML = ((S.tab=="overview"||S.tab=="bill")?pushCard():"") + (S.tab=="bill"?viewBill():S.tab=="notices"?viewNotices():S.tab=="report"?viewReport():viewOverview());
+  else m.innerHTML = ((S.tab=="overview"||S.tab=="bill")?pushCard():"") + (S.tab=="bill"?viewBill():S.tab=="notices"?viewNotices():S.tab=="report"?viewReport():S.tab=="projects"?viewProjects():viewOverview());
   document.getElementById("fn").textContent=DATA?t("updated",{d:DATA.generated}):"";
 }
 function viewOverview(){
@@ -185,6 +188,7 @@ function viewOverview(){
    '<div class="card"><div class="label">'+t("collectedFor",{p:pL(o.period)})+'</div><div class="value">'+money(o.collected)+'</div><div class="foot">'+t("ofBilled",{b:money(o.billed),n:o.paidCount,m:o.billCount})+'</div><div class="meter"><i style="width:'+rate+'%"></i></div></div>'+
    '<div class="card"><div class="label">'+t("expMonth")+'</div><div class="value">'+money(o.expMonth)+'</div></div>'+
    '<div class="card"><div class="label">'+t("debt")+'</div><div class="value">'+money(o.outstanding)+'</div><div class="foot">'+t("debtFoot",{n:o.debtors})+'</div></div></div>';
+  h+=projStrip();
   h+='<div class="grid two mt"><div class="card"><div style="display:flex;gap:10px"><div style="flex:1"><h2>'+t("incExp")+'</h2><p class="hint">'+t("last6")+'</p></div></div>'+chart(o)+'</div>'+
      '<div class="card"><h2>'+t("byCat")+'</h2><p class="hint">'+t("last12")+'</p>'+cats(o)+'</div></div>';
   h+='<div class="card mt"><h2>'+t("recent")+'</h2>'+(o.recent.length?'<div class="scroll"><table><thead><tr><th>'+t("date")+'</th><th>'+t("category")+'</th><th>'+t("note")+'</th><th class="num">'+t("amount")+'</th></tr></thead><tbody>'+
@@ -225,12 +229,13 @@ function viewBill(){
     '<div class="label mt">'+t("youOwe")+'</div><div class="big">'+money(owe)+'</div><div class="foot">'+(owe>0?(nextDue?pill(nextDue<today()?"overdue":"unpaid")+" &nbsp;"+t("dueBy",{d:dL(nextDue)}):""):pill("paid")+" &nbsp;"+t("allPaid"))+'</div>'+
     '<h2 class="mt">'+t("howToPay")+'</h2><div class="paybox" style="margin-top:8px">'+esc(b.payInfo||"—")+'</div></div>';
   h+='<div class="card">'+(latest?'<div style="display:flex;align-items:flex-start;gap:8px"><div style="flex:1"><h2>'+t("latest")+': '+esc(pL(latest.period))+'</h2><p class="hint">'+t("dueBy",{d:dL(latest.due)})+'</p></div>'+pill(latest.status)+'</div>'+breakdown(latest):'<div class="empty">'+t("noBills")+'</div>')+'</div></div>';
+  h+=projBill(b.apt);
   if(list.length) h+='<div class="card mt"><h2>'+t("history")+'</h2><div class="scroll"><table><thead><tr><th>'+t("period")+'</th><th class="num">'+t("kommunal")+'</th><th class="num">'+t("elec")+'</th><th class="num">'+t("parking")+'</th><th class="num">'+t("total")+'</th><th class="num">'+t("left")+'</th><th>'+t("due")+'</th><th>'+t("status")+'</th></tr></thead><tbody>'+
     list.map(function(x){return '<tr><td><b>'+esc(pL(x.period))+'</b></td><td class="num">'+money(x.kommunal)+'</td><td class="num">'+money(x.elec)+(x.kwh!=null?'<div class="small muted">'+x.kwh+' '+t("kwh")+'</div>':'')+'</td><td class="num">'+(x.parking?money(x.parking):"—")+'</td><td class="num">'+money(x.total)+'</td><td class="num"><b>'+money(x.left)+'</b></td><td>'+dL(x.due)+'</td><td>'+pill(x.status)+'</td></tr>';}).join("")+'</tbody></table></div></div>';
   return h;
 }
 function breakdown(x){
-  var r='<tr><td>'+t("kommunal")+'</td><td class="num">'+money(x.kommunal)+'</td></tr>';
+  var r='<tr><td>'+t("kommunal")+'<div class="small muted">'+t("komNote")+'</div></td><td class="num">'+money(x.kommunal)+'</td></tr>';
   if(x.prev!=null||x.cur!=null) r+='<tr><td>'+t("elec")+'<div class="small muted">'+(x.cur!=null&&x.prev!=null?t("meter")+': '+x.prev+' → '+x.cur+' = '+x.kwh+' '+t("kwh")+' × '+x.tariff:t("readingPending"))+'</div></td><td class="num">'+money(x.elec)+'</td></tr>';
   if(x.parking) r+='<tr><td>'+t("parking")+'</td><td class="num">'+money(x.parking)+'</td></tr>';
   if(x.extra) r+='<tr><td>'+esc(x.extraNote||t("extra"))+'</td><td class="num">'+money(x.extra)+'</td></tr>';
@@ -241,14 +246,75 @@ function breakdown(x){
 function viewReport(){
   var all=allBills(), ps=[];all.forEach(function(b){if(ps.indexOf(b.period)<0)ps.push(b.period);});ps.sort().reverse();
   if(!ps.length) return '<div class="card empty">'+t("noBills")+'</div>';
+  var prs=PR();
+  if(S.rp&&S.rp.indexOf("proj-")===0){var pj=prs.filter(function(x){return "proj-"+x.id===S.rp;})[0];if(pj)return projTable(pj,repSel(ps,prs,S.rp),true);}
   var p=S.rp&&ps.indexOf(S.rp)>=0?S.rp:ps[0], list=all.filter(function(b){return b.period===p;});
   function sm(k){return list.reduce(function(s,b){return s+(+b[k]||0);},0);}
-  var sel=ps.length>1?'<select id="rp">'+ps.map(function(x){return '<option value="'+x+'"'+(x===p?' selected':'')+'>'+esc(pL(x))+'</option>';}).join("")+'</select>':'';
+  var sel=repSel(ps,prs,p);
   var h='<div class="card"><div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap"><div style="flex:1"><h2>'+t("report")+': '+esc(pL(p))+'</h2><p class="hint">'+t("reportHint")+'</p></div>'+sel+'</div>'+
    '<div class="scroll"><table><thead><tr><th>'+t("apt")+'</th><th class="num">'+t("kommunal")+'</th><th class="num">'+t("prevR")+'</th><th class="num">'+t("curR")+'</th><th class="num">'+t("kwhCol")+'</th><th class="num">'+t("elec")+'</th><th class="num">'+t("parking")+'</th><th class="num">'+t("total")+'</th><th class="num">'+t("paid")+'</th><th>'+t("status")+'</th></tr></thead><tbody>'+
    list.map(function(b){return '<tr data-a="openApt" data-v="'+esc(b.apt)+'" style="cursor:pointer"><td><b>'+esc(b.apt)+'</b>'+(DATA.names&&DATA.names[b.apt]?'<div class="small muted" style="white-space:nowrap">'+esc(DATA.names[b.apt])+'</div>':'')+'</td><td class="num">'+money(b.kommunal)+'</td><td class="num muted">'+(b.prev!=null?b.prev:"—")+'</td><td class="num muted">'+(b.cur!=null?b.cur:"—")+'</td><td class="num">'+(b.kwh!=null?b.kwh:"—")+'</td><td class="num">'+money(b.elec)+'</td><td class="num">'+(b.parking?money(b.parking):"—")+'</td><td class="num"><b>'+money(b.total)+'</b></td><td class="num">'+money(b.paid)+'</td><td>'+pill(b.status)+'</td></tr>';}).join("")+
    '<tr style="background:var(--surface-2)"><td><b>'+t("total")+'</b></td><td class="num"><b>'+money(sm("kommunal"))+'</b></td><td></td><td></td><td class="num"><b>'+sm("kwh")+'</b></td><td class="num"><b>'+money(sm("elec"))+'</b></td><td class="num"><b>'+money(sm("parking"))+'</b></td><td class="num"><b>'+money(sm("total"))+'</b></td><td class="num"><b>'+money(sm("paid"))+'</b></td><td></td></tr></tbody></table></div></div>';
   return h;
+}
+function PR(){return (DATA&&DATA.projects)||[];}
+function repSel(ps,prs,cur){
+  if(ps.length<2&&!prs.length) return "";
+  var o=prs.length?'<optgroup label="'+esc(t("periodsG"))+'">':'';
+  o+=ps.map(function(x){return '<option value="'+x+'"'+(x===cur?' selected':'')+'>'+esc(pL(x))+'</option>';}).join("");
+  if(prs.length) o+='</optgroup><optgroup label="'+esc(t("projects"))+'">'+prs.map(function(x){var v="proj-"+x.id;return '<option value="'+v+'"'+(v===cur?' selected':'')+'>🏗 '+esc(x.title)+'</option>';}).join("")+'</optgroup>';
+  return '<select id="rp">'+o+'</select>';
+}
+function projStrip(){
+  return PR().filter(function(p){return p.status!=="done";}).map(function(p){var T=p.totals;
+    return '<div class="card mt pcard" data-a="tab" data-v="projects"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:200px"><div class="label">🏗 '+t("projects")+'</div><h2 style="margin-top:2px">'+esc(p.title)+'</h2></div>'+
+      '<div><div class="label">'+t("projCollected")+'</div><b>'+money(T.collected)+'</b> <span class="muted small">/ '+money(T.due)+'</span></div>'+
+      '<div><div class="label">'+t("projFull")+'</div><b>'+T.nFull+' / '+T.n+'</b></div><span class="linklike">'+t("more")+' →</span></div>'+
+      '<div class="meter"><i style="width:'+T.pct+'%"></i></div><div class="foot">'+T.pct+'% · '+t("projLeft")+': '+money(T.outstanding)+'</div></div>';}).join("");
+}
+function projKpis(p){var T=p.totals;
+  return '<div class="grid kpis mt">'+
+   '<div class="card"><div class="label">'+t("projTotal")+'</div><div class="value">'+(p.totalCost!=null?money(p.totalCost):money(T.due))+'</div><div class="foot">'+esc(p.costNote)+'</div></div>'+
+   '<div class="card"><div class="label">'+t("projCollected")+'</div><div class="value">'+money(T.collected)+'</div><div class="foot">'+t("projOf",{p:T.pct,b:money(T.due)})+'</div><div class="meter"><i style="width:'+T.pct+'%"></i></div></div>'+
+   '<div class="card"><div class="label">'+t("projLeft")+'</div><div class="value">'+money(T.outstanding)+'</div><div class="foot">'+t("projLeftFoot",{n:T.nPart+T.nNone})+'</div></div>'+
+   '<div class="card"><div class="label">'+t("projFull")+'</div><div class="value">'+T.nFull+' / '+T.n+'</div><div class="foot">'+t("projFullFoot",{p:T.nPart,u:T.nNone})+'</div></div></div>';
+}
+function projTable(p,sel,withHead){
+  var f=S.pf||"all", rows=p.order.map(function(a){return p.shares[a];}).filter(function(x){return f==="all"||x.left>1;});
+  var h='<div class="card'+(withHead?'':' mt')+'"><div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap"><div style="flex:1"><h2>'+(withHead?t("projReport")+': ':'')+esc(p.title)+'</h2><p class="hint">'+t("allApts")+' · '+p.totals.n+' '+t("apts")+'</p></div>'+(sel||"")+
+    '<div class="seg"><button data-a="pf" data-v="all" class="'+(f==="all"?"on":"")+'">'+t("filterAll")+'</button><button data-a="pf" data-v="debt" class="'+(f==="debt"?"on":"")+'">'+t("filterDebt")+'</button></div></div>';
+  h+='<div class="scroll"><table><thead><tr><th>'+t("apt")+'</th><th>'+t("grp")+'</th><th class="num">'+t("share")+'</th><th class="num">'+t("credit")+'</th><th class="num">'+t("dueAmt")+'</th><th class="num">'+t("projPaid")+'</th><th class="num">'+t("left")+'</th><th>'+t("projStatus")+'</th></tr></thead><tbody>';
+  var sm={share:0,credit:0,due:0,paid:0,left:0};
+  rows.forEach(function(x){["share","credit","due","paid"].forEach(function(k){sm[k]+=x[k];});sm.left+=Math.max(0,x.left);
+    h+='<tr data-a="openApt" data-v="'+esc(x.apt)+'" style="cursor:pointer"><td><b>'+esc(x.apt)+'</b>'+(DATA.names[x.apt]?'<div class="small muted" style="white-space:nowrap">'+esc(DATA.names[x.apt])+'</div>':'')+'</td><td class="small">'+esc(x.grp)+'</td><td class="num">'+money(x.share)+'</td><td class="num muted">'+(x.credit?"−"+money(x.credit):"—")+'</td><td class="num">'+money(x.due)+'</td><td class="num">'+money(x.paid)+(x.lastPaid?'<div class="small muted">'+dL(x.lastPaid)+'</div>':'')+'</td><td class="num"><b>'+(x.left>1?money(x.left):"—")+'</b>'+(x.left<-1?'<div class="small" style="color:var(--good-text)">+'+money(-x.left)+'</div>':'')+'</td><td>'+pill(x.status)+'</td></tr>';});
+  h+='<tr style="background:var(--surface-2)"><td colspan="2"><b>'+t("total")+'</b></td><td class="num"><b>'+money(sm.share)+'</b></td><td class="num"><b>'+(sm.credit?"−"+money(sm.credit):"—")+'</b></td><td class="num"><b>'+money(sm.due)+'</b></td><td class="num"><b>'+money(sm.paid)+'</b></td><td class="num"><b>'+money(sm.left)+'</b></td><td></td></tr></tbody></table></div>';
+  if(p.others.length) h+='<p class="small muted" style="margin:10px 0 0">'+t("notIn",{a:p.others.map(function(a){return esc(a)+(DATA.names[a]?" ("+esc(DATA.names[a])+")":"");}).join(", ")})+'</p>';
+  return h+'</div>';
+}
+function viewProjects(){
+  var prs=PR(); if(!prs.length) return '<div class="card empty">—</div>';
+  return prs.map(function(p,i){
+    var h='<div class="card'+(i?' mt':'')+'"><div class="label">🏗 '+t("projects")+(p.start?' · '+t("startD")+': '+dL(p.start):'')+'</div><h2 style="font-size:19px;margin-top:2px">'+esc(p.title)+'</h2>'+(p.description?'<p class="desc">'+esc(p.description)+'</p>':'')+'</div>';
+    h+=projKpis(p);
+    h+='<div class="grid two mt"><div class="card"><h2>'+t("groupsT")+'</h2><table><thead><tr><th>'+t("grp")+'</th><th class="num">'+t("apts")+'</th><th class="num">'+t("perApt")+'</th><th class="num">'+t("projCollected")+'</th></tr></thead><tbody>'+
+      p.groups.map(function(g){var pc=g.due?Math.round(g.paid/g.due*100):0;return '<tr><td><b>'+esc(g.name||"—")+'</b></td><td class="num">'+g.n+'</td><td class="num">'+money(g.share)+'</td><td class="num">'+pc+'%<div class="meter" style="margin-top:4px"><i style="width:'+pc+'%"></i></div></td></tr>';}).join("")+'</tbody></table></div>';
+    h+='<div class="card"><h2>'+t("spentT")+'</h2>'+(p.expenses.length?'<table><tbody>'+p.expenses.map(function(e){return '<tr><td class="small">'+dL(e.date)+'</td><td class="small">'+esc(e.note)+'</td><td class="num">−'+money(e.amount)+'</td></tr>';}).join("")+
+      '<tr><td colspan="2"><b>'+t("spent")+'</b></td><td class="num"><b>'+money(p.spent)+'</b></td></tr><tr><td colspan="2"><b>'+t("cash")+'</b></td><td class="num"><b>'+money(p.cash)+'</b></td></tr></tbody></table>':'<div class="empty">'+t("noSpent")+'</div>')+'</div></div>';
+    return h+projTable(p,"",false);
+  }).join('<div style="height:22px"></div>');
+}
+function projBill(apt){
+  return PR().map(function(p){var x=p.shares[apt];
+    if(!x) return '<div class="card mt"><div class="label">🏗 '+t("projects")+'</div><h2>'+esc(p.title)+'</h2><p class="muted small" style="margin:6px 0 0">'+t("notInYou",{a:esc(apt)})+'</p></div>';
+    var r='<tr><td>'+t("share")+(x.grp?' <span class="small muted">('+esc(x.grp)+')</span>':'')+'</td><td class="num">'+money(x.share)+'</td></tr>';
+    if(x.credit) r+='<tr><td>'+esc(x.creditNote||t("credit"))+'</td><td class="num">−'+money(x.credit)+'</td></tr>';
+    r+='<tr><td><b>'+t("dueAmt")+'</b></td><td class="num"><b>'+money(x.due)+'</b></td></tr><tr><td>'+t("projPaid")+'</td><td class="num">−'+money(x.paid)+'</td></tr>'+
+      '<tr><td><b>'+t("left")+'</b></td><td class="num"><b>'+(x.left>1?money(x.left):money(0))+'</b>'+(x.left<-1?'<div class="small" style="color:var(--good-text)">'+t("overBy",{a:money(-x.left)})+'</div>':'')+'</td></tr>';
+    var pct=x.due?Math.min(100,Math.round(x.paid/x.due*100)):0;
+    return '<div class="grid two mt"><div class="card"><div style="display:flex;gap:8px;align-items:flex-start"><div style="flex:1"><div class="label">🏗 '+t("yourShare")+'</div><h2>'+esc(p.title)+'</h2></div>'+pill(x.status)+'</div>'+
+      '<div class="meter"><i style="width:'+pct+'%"></i></div><table class="mt"><tbody>'+r+'</tbody></table>'+(x.signed?'<p class="small muted" style="margin:8px 0 0">✓ '+t("signed")+'</p>':'')+'</div>'+
+      '<div class="card"><h2>'+t("installments")+'</h2>'+(x.payments.length?'<table><tbody>'+x.payments.map(function(y){return '<tr><td>'+dL(y.paid_at)+'</td><td class="num">'+money(y.amount)+'</td></tr>';}).join("")+'</tbody></table>':'<div class="empty">'+t("noInst")+'</div>')+'</div></div>';
+  }).join("");
 }
 function isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);}
 function isStandalone(){return (window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;}
@@ -298,7 +364,8 @@ window.addEventListener("hashchange",function(){var h=decodeURIComponent((locati
 document.addEventListener("submit",function(e){ if(e.target.id!="lf")return; e.preventDefault(); login(document.getElementById("apt").value,"",document.getElementById("rem").checked); });
 document.addEventListener("click",function(e){var b=e.target.closest("[data-a]");if(!b)return;var a=b.getAttribute("data-a"),v=b.getAttribute("data-v");
   if(a=="lang"){S.lang=v;lsSet("lang",v);render();}
-  else if(a=="tab"){S.tab=v;render();}
+  else if(a=="tab"){S.tab=v;render();window.scrollTo(0,0);}
+  else if(a=="pf"){S.pf=v;render();}
   else if(a=="pushOn"){enablePush(document.getElementById("papt").value);}
   else if(a=="pushEdit"){S.pushEdit=true;render();}
   else if(a=="openApt"){S.tab="bill";login(v,"",false);window.scrollTo(0,0);}
